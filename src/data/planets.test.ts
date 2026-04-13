@@ -22,8 +22,12 @@ describe("planet data", () => {
   });
 
   it("includes local images and next-step prompts", () => {
+    const basePath = import.meta.env.BASE_URL;
+
     expect(
-      planets.every((planet) => planet.imageSrc.startsWith("/planets/"))
+      planets.every((planet) =>
+        planet.imageSrc.startsWith(`${basePath}planets/`)
+      )
     ).toBe(true);
     expect(
       planets.every((planet) => planet.nextExplorationPrompt.length > 0)
@@ -31,7 +35,13 @@ describe("planet data", () => {
     expect(
       planets.every(
         (planet) =>
-          statSync(join(process.cwd(), "public", planet.imageSrc)).size > 1024
+          statSync(
+            join(
+              process.cwd(),
+              "public",
+              planet.imageSrc.replace(basePath, "")
+            )
+          ).size > 1024
       )
     ).toBe(true);
   });

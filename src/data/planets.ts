@@ -3,6 +3,10 @@ import type { PlanetRecord } from "../types/solar-system";
 export const scaleNotice =
   "보기 쉽게 일부 크기와 거리 표현을 조정했습니다. 비교는 안내 문장과 비교 보기 화면을 함께 참고하세요.";
 
+function withBase(path: string) {
+  return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+}
+
 export const planets: PlanetRecord[] = [
   {
     id: "mercury",
@@ -14,7 +18,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 88,
     distanceFromSunAU: 0.39,
     diameterEarths: 0.38,
-    imageSrc: "/planets/mercury.webp",
+    imageSrc: withBase("/planets/mercury.webp"),
     summary: "태양에 가장 가까워 빠르게 한 바퀴를 도는 행성이에요.",
     facts: ["태양과 가장 가깝다", "공전 속도가 가장 빠르다"],
     nextExplorationPrompt: "다음으로 금성을 눌러 지구와의 크기 차이를 살펴보세요.",
@@ -29,7 +33,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 225,
     distanceFromSunAU: 0.72,
     diameterEarths: 0.95,
-    imageSrc: "/planets/venus.webp",
+    imageSrc: withBase("/planets/venus.webp"),
     summary: "두꺼운 구름 때문에 밝게 보이는 행성이에요.",
     facts: ["지구와 크기가 비슷하다", "밝게 보인다"],
     nextExplorationPrompt: "다음으로 지구를 눌러 금성과 얼마나 비슷한지 비교해 보세요.",
@@ -44,7 +48,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 365,
     distanceFromSunAU: 1,
     diameterEarths: 1,
-    imageSrc: "/planets/earth.webp",
+    imageSrc: withBase("/planets/earth.webp"),
     summary: "우리가 살고 있는 행성이며 비교 기준으로 사용해요.",
     facts: ["생명체가 사는 행성", "비교 기준 행성"],
     nextExplorationPrompt: "다음으로 화성을 눌러 지구보다 얼마나 작은지 확인해 보세요.",
@@ -59,7 +63,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 687,
     distanceFromSunAU: 1.52,
     diameterEarths: 0.53,
-    imageSrc: "/planets/mars.webp",
+    imageSrc: withBase("/planets/mars.webp"),
     summary: "붉은빛이 도는 작은 행성이에요.",
     facts: ["붉게 보인다", "지구보다 작다"],
     nextExplorationPrompt: "다음으로 목성을 눌러 크기 차이가 얼마나 큰지 살펴보세요.",
@@ -74,7 +78,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 4333,
     distanceFromSunAU: 5.2,
     diameterEarths: 11.2,
-    imageSrc: "/planets/jupiter.webp",
+    imageSrc: withBase("/planets/jupiter.webp"),
     summary: "태양계에서 가장 큰 행성이에요.",
     facts: ["가장 크다", "줄무늬가 보인다"],
     nextExplorationPrompt: "다음으로 토성을 눌러 큰 행성끼리 어떻게 다른지 비교해 보세요.",
@@ -89,7 +93,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 10759,
     distanceFromSunAU: 9.58,
     diameterEarths: 9.45,
-    imageSrc: "/planets/saturn.webp",
+    imageSrc: withBase("/planets/saturn.webp"),
     summary: "넓은 고리로 유명한 큰 행성이에요.",
     facts: ["고리가 있다", "매우 크다"],
     nextExplorationPrompt: "다음으로 천왕성을 눌러 바깥 행성의 공전 속도를 비교해 보세요.",
@@ -104,7 +108,7 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 30687,
     distanceFromSunAU: 19.2,
     diameterEarths: 4.01,
-    imageSrc: "/planets/uranus.webp",
+    imageSrc: withBase("/planets/uranus.webp"),
     summary: "푸른빛을 띠는 차가운 바깥 행성이에요.",
     facts: ["멀리 있다", "푸른빛이 돈다"],
     nextExplorationPrompt: "다음으로 해왕성을 눌러 태양에서 더 멀리 있는 행성을 찾아보세요.",
@@ -119,10 +123,9 @@ export const planets: PlanetRecord[] = [
     orbitalPeriodDays: 60190,
     distanceFromSunAU: 30.05,
     diameterEarths: 3.88,
-    imageSrc: "/planets/neptune.webp",
+    imageSrc: withBase("/planets/neptune.webp"),
     summary: "태양에서 가장 멀리 있는 행성이에요.",
     facts: ["태양에서 가장 멀다", "공전이 매우 느리다"],
     nextExplorationPrompt: "다음으로 수성을 눌러 가장 빠른 행성과 가장 느린 행성을 비교해 보세요.",
   },
 ];
-
