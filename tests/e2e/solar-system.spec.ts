@@ -61,6 +61,21 @@ async function expectPlanetPanel(
   await expect(panel.getByText(summarySnippet)).toBeVisible();
 }
 
+async function expectImageLoaded(image: Locator) {
+  await expect(image).toBeVisible();
+  await expect
+    .poll(async () =>
+      image.evaluate((node) => {
+        if (!(node instanceof HTMLImageElement)) {
+          return 0;
+        }
+
+        return node.naturalWidth;
+      })
+    )
+    .toBeGreaterThan(0);
+}
+
 test.describe("Interactive Solar System", () => {
   test("desktop flow: pause, click earth, and open comparison view", async ({
     page,
@@ -78,6 +93,10 @@ test.describe("Interactive Solar System", () => {
       "지구",
       "우리가 살고 있는 행성이며 비교 기준으로 사용해요."
     );
+    await expectImageLoaded(desktopPanel.getByAltText("지구의 실제 모습"));
+    await expect(
+      desktopPanel.getByRole("link", { name: "NASA Science Photojournal" })
+    ).toHaveAttribute("href", "https://science.nasa.gov/photojournal/earth/");
 
     await page.getByRole("button", { name: "비교 보기" }).click();
     await expect(
@@ -115,6 +134,10 @@ test.describe("Interactive Solar System", () => {
         "지구",
         "우리가 살고 있는 행성이며 비교 기준으로 사용해요."
       );
+      await expectImageLoaded(mobileSheet.getByAltText("지구의 실제 모습"));
+      await expect(
+        mobileSheet.getByRole("link", { name: "NASA Science Photojournal" })
+      ).toHaveAttribute("href", "https://science.nasa.gov/photojournal/earth/");
 
       await page.getByRole("button", { name: "비교 보기" }).click();
       await expect(

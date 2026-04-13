@@ -162,13 +162,54 @@ input {
   border-radius: 1rem;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .info-panel__image {
   display: block;
   width: 100%;
   aspect-ratio: 1;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 0.9rem;
+}
+
+.info-panel__figure-caption {
+  padding: 0 0.9rem 0.9rem;
+}
+
+.planet-image-attribution {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.planet-image-attribution__label {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 247, 255, 0.52);
+}
+
+.planet-image-attribution__body {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(244, 247, 255, 0.72);
+}
+
+.planet-image-attribution__link {
+  color: rgba(146, 201, 255, 0.95);
+  text-decoration: none;
+}
+
+.planet-image-attribution__link:hover,
+.planet-image-attribution__link:focus-visible {
+  text-decoration: underline;
+}
+
+.planet-image-attribution__credit {
+  display: inline;
+  margin-left: 0.4rem;
 }
 
 .info-panel__summary,
@@ -622,9 +663,10 @@ input {
   .mobile-info-sheet__image {
     width: 100%;
     aspect-ratio: 1;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 1rem;
     background: rgba(255, 255, 255, 0.06);
+    padding: 0.45rem;
   }
 
   .mobile-info-sheet__summary,

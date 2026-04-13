@@ -21,6 +21,9 @@ export interface PlanetRecord {
   distanceFromSunAU: number;
   diameterEarths: number;
   imageSrc: string;
+  imageSourceLabel: string;
+  imageSourceUrl: string;
+  imageCredit: string;
   summary: string;
   facts: string[];
   nextExplorationPrompt: string;
@@ -31,4 +34,3 @@ export interface ComparisonRow {
   label: string;
   value: number;
 }
-

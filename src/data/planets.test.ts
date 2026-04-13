@@ -26,11 +26,19 @@ describe("planet data", () => {
 
     expect(
       planets.every((planet) =>
-        planet.imageSrc.startsWith(`${basePath}planets/`)
+        planet.imageSrc.startsWith(`${basePath}planets/nasa/`)
       )
     ).toBe(true);
     expect(
       planets.every((planet) => planet.nextExplorationPrompt.length > 0)
+    ).toBe(true);
+    expect(
+      planets.every(
+        (planet) =>
+          planet.imageSourceUrl.startsWith("https://science.nasa.gov/") &&
+          planet.imageSourceLabel.startsWith("NASA Science") &&
+          planet.imageCredit.length > 0
+      )
     ).toBe(true);
     expect(
       planets.every(

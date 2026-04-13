@@ -1,4 +1,5 @@
 import type { PlanetRecord } from "../../types/solar-system";
+import PlanetImageAttribution from "./PlanetImageAttribution";
 
 interface PlanetInfoPanelProps {
   planet: PlanetRecord | null;
@@ -26,6 +27,9 @@ export default function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
               className="info-panel__image"
               src={planet.imageSrc}
             />
+            <figcaption className="info-panel__figure-caption">
+              <PlanetImageAttribution planet={planet} />
+            </figcaption>
           </figure>
 
           <p className="info-panel__summary">{planet.summary}</p>

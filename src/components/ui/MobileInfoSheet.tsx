@@ -1,4 +1,5 @@
 import type { PlanetRecord } from "../../types/solar-system";
+import PlanetImageAttribution from "./PlanetImageAttribution";
 
 interface MobileInfoSheetProps {
   planet: PlanetRecord | null;
@@ -32,6 +33,8 @@ export default function MobileInfoSheet({ planet }: MobileInfoSheetProps) {
             />
             <p className="mobile-info-sheet__summary">{planet.summary}</p>
           </div>
+
+          <PlanetImageAttribution planet={planet} />
 
           <section aria-label="기초 수치">
             <h3 className="mobile-info-sheet__section-title">기초 수치</h3>

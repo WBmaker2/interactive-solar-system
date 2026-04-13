@@ -18,5 +18,10 @@ describe("MobileInfoSheet", () => {
     ).toHaveAttribute("data-open", "true");
     expect(screen.getByRole("heading", { name: "지구" })).toBeInTheDocument();
     expect(screen.getByText("우리가 살고 있는 행성이며 비교 기준으로 사용해요.")).toBeInTheDocument();
+    expect(screen.getByText("이미지 출처")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "NASA Science Photojournal" })
+    ).toHaveAttribute("href", "https://science.nasa.gov/photojournal/earth/");
+    expect(screen.getByText(/제공: NASA$/)).toBeInTheDocument();
   });
 });
