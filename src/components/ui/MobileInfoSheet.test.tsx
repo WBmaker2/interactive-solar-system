@@ -1,0 +1,22 @@
+import { render, screen } from "@testing-library/react";
+import { planets } from "../../data/planets";
+import MobileInfoSheet from "./MobileInfoSheet";
+
+describe("MobileInfoSheet", () => {
+  it("keeps the guidance visible before selection and opens with selection", () => {
+    const { rerender } = render(<MobileInfoSheet planet={null} />);
+
+    expect(
+      screen.getByRole("complementary", { name: "행성 정보 바텀 시트" })
+    ).toHaveAttribute("data-open", "false");
+    expect(screen.getByRole("heading", { name: "아래에서 바로 확인해요" })).toBeInTheDocument();
+
+    rerender(<MobileInfoSheet planet={planets[2]} />);
+
+    expect(
+      screen.getByRole("complementary", { name: "행성 정보 바텀 시트" })
+    ).toHaveAttribute("data-open", "true");
+    expect(screen.getByRole("heading", { name: "지구" })).toBeInTheDocument();
+    expect(screen.getByText("우리가 살고 있는 행성이며 비교 기준으로 사용해요.")).toBeInTheDocument();
+  });
+});
