@@ -10,7 +10,6 @@ import { useSolarSystemApp } from "./hooks/useSolarSystemApp";
 export default function App() {
   const {
     planets,
-    angles,
     selectedPlanetId,
     isPlaying,
     speedMultiplier,
@@ -18,6 +17,7 @@ export default function App() {
     isCurrentMissionComplete,
     comparisonMode,
     isComparisonOpen,
+    sceneResetVersion,
     selectPlanet,
     togglePlaying,
     setSpeedMultiplier,
@@ -55,10 +55,12 @@ export default function App() {
         <main className="app-main">
           <section className="scene-column">
             <SolarSystemCanvas
-              angles={angles}
               onPlanetSelect={selectPlanet}
+              isPlaying={isPlaying}
               planets={planets}
               selectedPlanetId={selectedPlanetId}
+              sceneResetVersion={sceneResetVersion}
+              speedMultiplier={speedMultiplier}
             />
             <ScaleNotice />
           </section>

@@ -1,46 +1,10 @@
 import { act, renderHook } from "@testing-library/react";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { missions } from "../data/missions";
 import { useSolarSystemApp } from "./useSolarSystemApp";
 
-type RafCallback = FrameRequestCallback;
-
 describe("useSolarSystemApp", () => {
-  let frameId = 0;
-  const scheduledFrames = new Map<number, RafCallback>();
-
-  const requestAnimationFrameMock = (callback: RafCallback) => {
-    frameId += 1;
-    scheduledFrames.set(frameId, callback);
-    return frameId;
-  };
-
-  const cancelAnimationFrameMock = (id: number) => {
-    scheduledFrames.delete(id);
-  };
-
-  const flushFrames = (now: number) => {
-    const callbacks = Array.from(scheduledFrames.entries());
-    scheduledFrames.clear();
-
-    for (const [, callback] of callbacks) {
-      callback(now);
-    }
-  };
-
-  beforeEach(() => {
-    frameId = 0;
-    scheduledFrames.clear();
-    vi.stubGlobal("requestAnimationFrame", requestAnimationFrameMock);
-    vi.stubGlobal("cancelAnimationFrame", cancelAnimationFrameMock);
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
-    scheduledFrames.clear();
-  });
-
   it("updates selected planet and comparison mode", () => {
     const { result } = renderHook(() => useSolarSystemApp());
 
@@ -124,48 +88,17 @@ describe("useSolarSystemApp", () => {
     expect(result.current.isCurrentMissionComplete).toBe(false);
   });
 
-  it("advances angles while playing and pauses the loop when stopped", () => {
+  it("tracks play and speed controls as UI state", () => {
     const { result } = renderHook(() => useSolarSystemApp());
 
-    act(() => {
-      flushFrames(16);
-      flushFrames(32);
-    });
-
-    const angleWhilePlaying = result.current.angles.mercury;
-    expect(angleWhilePlaying).toBeGreaterThan(0);
+    expect(result.current.isPlaying).toBe(true);
+    expect(result.current.speedMultiplier).toBe(6);
 
     act(() => result.current.togglePlaying());
-
-    act(() => {
-      flushFrames(48);
-      flushFrames(64);
-    });
-
-    expect(result.current.angles.mercury).toBe(angleWhilePlaying);
-  });
-
-  it("reacts to speed changes in the animation loop", () => {
-    const { result } = renderHook(() => useSolarSystemApp());
-
-    act(() => {
-      flushFrames(16);
-      flushFrames(32);
-    });
-
-    const angleAtDefaultSpeed = result.current.angles.mercury;
-
     act(() => result.current.setSpeedMultiplier(12));
 
-    act(() => {
-      flushFrames(48);
-      flushFrames(64);
-    });
-
-    const angleAtFasterSpeed = result.current.angles.mercury;
-
-    expect(angleAtFasterSpeed).toBeGreaterThan(angleAtDefaultSpeed);
-    expect(angleAtFasterSpeed - angleAtDefaultSpeed).toBeGreaterThan(0.4);
+    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.speedMultiplier).toBe(12);
   });
 
   it("resets the scene deterministically without reloading", () => {
@@ -175,6 +108,7 @@ describe("useSolarSystemApp", () => {
     act(() => result.current.openComparison("distance"));
     act(() => result.current.togglePlaying());
     act(() => result.current.setSpeedMultiplier(12));
+    const resetVersionBefore = result.current.sceneResetVersion;
     expect(result.current.isCurrentMissionComplete).toBe(true);
     act(() => result.current.resetScene());
 
@@ -183,19 +117,10 @@ describe("useSolarSystemApp", () => {
     expect(result.current.isComparisonOpen).toBe(false);
     expect(result.current.isPlaying).toBe(true);
     expect(result.current.speedMultiplier).toBe(6);
-    expect(result.current.angles).toEqual({
-      mercury: 0,
-      venus: 40,
-      earth: 90,
-      mars: 140,
-      jupiter: 180,
-      saturn: 220,
-      uranus: 260,
-      neptune: 300,
-    });
     expect(result.current.currentMission?.id).toBe(missions[0].id);
     expect(result.current.currentMissionIndex).toBe(0);
     expect(result.current.completedMissionIds).toEqual([]);
     expect(result.current.isCurrentMissionComplete).toBe(false);
+    expect(result.current.sceneResetVersion).toBe(resetVersionBefore + 1);
   });
 });

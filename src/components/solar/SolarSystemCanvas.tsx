@@ -7,66 +7,17 @@ import {
 } from "react";
 
 import { hitTestPlanet, type PlanetHitTarget } from "../../lib/hitTest";
+import { advanceAngles } from "../../lib/orbits";
+import { buildScene, createInitialAngles } from "../../lib/scene";
 import type { PlanetId, PlanetRecord } from "../../types/solar-system";
-
-interface ScenePlanet {
-  planet: PlanetRecord;
-  x: number;
-  y: number;
-  displayRadius: number;
-  hitRadius: number;
-}
 
 interface SolarSystemCanvasProps {
   planets: PlanetRecord[];
-  angles: Record<PlanetId, number>;
   selectedPlanetId: PlanetId | null;
+  isPlaying: boolean;
+  speedMultiplier: number;
+  sceneResetVersion: number;
   onPlanetSelect: (planetId: PlanetId | null) => void;
-}
-
-const scenePadding = 28;
-const minPlanetRadius = 4;
-const maxPlanetRadius = 24;
-
-function buildScene(
-  width: number,
-  height: number,
-  planets: PlanetRecord[],
-  angles: Record<PlanetId, number>
-) {
-  const maxOrbitRadius = planets[planets.length - 1]?.orbitRadius ?? 1;
-  const usableRadius = Math.max(0, Math.min(width, height) / 2 - scenePadding);
-  const orbitScale = usableRadius / maxOrbitRadius;
-  const centerX = width / 2;
-  const centerY = height / 2;
-  const sunRadius = Math.max(22, Math.min(38, Math.min(width, height) * 0.075));
-
-  const scenePlanets = planets.map((planet) => {
-    const angle = ((angles[planet.id] ?? 0) - 90) * (Math.PI / 180);
-    const orbitRadius = planet.orbitRadius * orbitScale;
-    const displayRadius = Math.min(
-      maxPlanetRadius,
-      Math.max(minPlanetRadius, planet.visualRadius * orbitScale)
-    );
-    const x = centerX + Math.cos(angle) * orbitRadius;
-    const y = centerY + Math.sin(angle) * orbitRadius;
-
-    return {
-      planet,
-      x,
-      y,
-      displayRadius,
-      hitRadius: Math.max(displayRadius + 6, 10),
-    };
-  });
-
-  return {
-    centerX,
-    centerY,
-    orbitScale,
-    sunRadius,
-    scenePlanets,
-  };
 }
 
 function drawScene(
@@ -74,7 +25,7 @@ function drawScene(
   planets: PlanetRecord[],
   angles: Record<PlanetId, number>,
   selectedPlanetId: PlanetId | null,
-  targetsRef: MutableRefObject<PlanetHitTarget[]>
+  targetsRef: MutableRefObject<PlanetHitTarget[]>,
 ) {
   const context = canvas.getContext("2d");
 
@@ -192,13 +143,19 @@ function drawScene(
 
 export default function SolarSystemCanvas({
   planets,
-  angles,
   selectedPlanetId,
+  isPlaying,
+  speedMultiplier,
+  sceneResetVersion,
   onPlanetSelect,
 }: SolarSystemCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const stageRef = useRef<HTMLElement | null>(null);
   const sceneTargetRef = useRef<PlanetHitTarget[]>([]);
+  const anglesRef = useRef(createInitialAngles());
+  const appliedResetVersionRef = useRef(sceneResetVersion);
+  const frameRef = useRef<number | null>(null);
+  const previousTimeRef = useRef<number | null>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
@@ -242,8 +199,48 @@ export default function SolarSystemCanvas({
       return;
     }
 
-    drawScene(canvas, planets, angles, selectedPlanetId, sceneTargetRef);
-  }, [angles, canvasSize.height, canvasSize.width, planets, selectedPlanetId]);
+    const stopLoop = () => {
+      if (frameRef.current !== null) {
+        cancelAnimationFrame(frameRef.current);
+        frameRef.current = null;
+      }
+      previousTimeRef.current = null;
+    };
+
+    if (appliedResetVersionRef.current !== sceneResetVersion) {
+      anglesRef.current = createInitialAngles();
+      appliedResetVersionRef.current = sceneResetVersion;
+    }
+
+    stopLoop();
+    drawScene(canvas, planets, anglesRef.current, selectedPlanetId, sceneTargetRef);
+
+    if (!isPlaying) {
+      return stopLoop;
+    }
+
+    const tick = (now: number) => {
+      const previousTime = previousTimeRef.current ?? now;
+      const deltaMs = now - previousTime;
+
+      anglesRef.current = advanceAngles(anglesRef.current, planets, deltaMs, speedMultiplier);
+      previousTimeRef.current = now;
+      drawScene(canvas, planets, anglesRef.current, selectedPlanetId, sceneTargetRef);
+      frameRef.current = requestAnimationFrame(tick);
+    };
+
+    frameRef.current = requestAnimationFrame(tick);
+
+    return stopLoop;
+  }, [
+    canvasSize.height,
+    canvasSize.width,
+    isPlaying,
+    planets,
+    sceneResetVersion,
+    selectedPlanetId,
+    speedMultiplier,
+  ]);
 
   const handlePointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;

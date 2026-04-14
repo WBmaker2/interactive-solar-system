@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { missions } from "./data/missions";
 import { planets } from "./data/planets";
-import type { ComparisonMode, PlanetId } from "./types/solar-system";
+import type { ComparisonMode } from "./types/solar-system";
 
 const mockUseSolarSystemApp = vi.fn();
 
@@ -13,21 +13,9 @@ vi.mock("./hooks/useSolarSystemApp", () => ({
 
 import App from "./App";
 
-const angles: Record<PlanetId, number> = {
-  mercury: 0,
-  venus: 40,
-  earth: 90,
-  mars: 140,
-  jupiter: 180,
-  saturn: 220,
-  uranus: 260,
-  neptune: 300,
-};
-
 function createHookState(overrides: Partial<ReturnType<typeof mockUseSolarSystemApp>> = {}) {
   return {
     planets,
-    angles,
     selectedPlanetId: null,
     isPlaying: true,
     speedMultiplier: 6,
@@ -35,6 +23,7 @@ function createHookState(overrides: Partial<ReturnType<typeof mockUseSolarSystem
     isCurrentMissionComplete: false,
     comparisonMode: "size" as ComparisonMode,
     isComparisonOpen: false,
+    sceneResetVersion: 0,
     selectPlanet: vi.fn(),
     togglePlaying: vi.fn(),
     setSpeedMultiplier: vi.fn(),
