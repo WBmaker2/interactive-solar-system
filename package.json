@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test:e2e": "playwright test",
+    "test:e2e:pages": "PLAYWRIGHT_BASE_URL=https://wbmaker2.github.io/interactive-solar-system/ playwright test",
     "test:e2e:headed": "playwright test --headed",
     "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
     "test": "vitest"
