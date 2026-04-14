@@ -9,6 +9,23 @@ export type PlanetId =
   | "neptune";
 
 export type ComparisonMode = "size" | "distance";
+export type MissionGoalType = "selectPlanet";
+
+export interface MissionDefinition {
+  id: string;
+  goalType: MissionGoalType;
+  prompt: string;
+  targetPlanetId: PlanetId;
+}
+
+export interface MissionEvaluationContext {
+  selectedPlanetId: PlanetId | null;
+}
+
+export interface MissionEvaluationResult {
+  isComplete: boolean;
+  progress: number;
+}
 
 export interface PlanetRecord {
   id: PlanetId;
