@@ -1,13 +1,14 @@
 import type { PlanetRecord } from "../../types/solar-system";
+import {
+  describeDistance,
+  describeOrbitalPeriod,
+  describePlanetSize,
+  formatPlanetMetricValue,
+} from "../../lib/planet-interpretation";
 import PlanetImageAttribution from "./PlanetImageAttribution";
 
 interface PlanetInfoPanelProps {
   planet: PlanetRecord | null;
-}
-
-function formatValue(value: number) {
-  const rounded = value.toFixed(2);
-  return rounded.replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
 }
 
 export default function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
@@ -39,15 +40,36 @@ export default function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
             <dl className="info-panel__metrics">
               <div>
                 <dt>크기</dt>
-                <dd>지구의 {formatValue(planet.diameterEarths)}배</dd>
+                <dd>
+                  <span className="info-panel__metric-value">
+                    지구의 {formatPlanetMetricValue(planet.diameterEarths, "배")}
+                  </span>
+                  <span className="info-panel__metric-note">
+                    {describePlanetSize(planet.diameterEarths)}
+                  </span>
+                </dd>
               </div>
               <div>
                 <dt>태양과의 거리</dt>
-                <dd>{formatValue(planet.distanceFromSunAU)} AU</dd>
+                <dd>
+                  <span className="info-panel__metric-value">
+                    {formatPlanetMetricValue(planet.distanceFromSunAU, "AU")}
+                  </span>
+                  <span className="info-panel__metric-note">
+                    {describeDistance(planet.distanceFromSunAU)}
+                  </span>
+                </dd>
               </div>
               <div>
                 <dt>공전</dt>
-                <dd>{formatValue(planet.orbitalPeriodDays)}일</dd>
+                <dd>
+                  <span className="info-panel__metric-value">
+                    {formatPlanetMetricValue(planet.orbitalPeriodDays, "일")}
+                  </span>
+                  <span className="info-panel__metric-note">
+                    {describeOrbitalPeriod(planet.orbitalPeriodDays)}
+                  </span>
+                </dd>
               </div>
             </dl>
           </section>
@@ -62,7 +84,7 @@ export default function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
           </section>
 
           <section className="info-panel__next" aria-label="다음 탐색 안내">
-            <h3 className="info-panel__section-title">다음 탐색</h3>
+            <h3 className="info-panel__section-title">다음 관찰 포인트</h3>
             <p>{planet.nextExplorationPrompt}</p>
           </section>
         </div>
@@ -71,12 +93,12 @@ export default function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
           <p className="info-panel__eyebrow">행성 탐색</p>
           <h2 className="info-panel__title">행성을 눌러 보세요</h2>
           <p className="info-panel__summary">
-            아직 선택된 행성이 없습니다. 태양계 무대에서 행성을 클릭하면 크기,
-            거리, 공전 정보를 한 번에 볼 수 있습니다.
+            아직 선택된 행성이 없습니다. 행성을 누르면 숫자와 쉬운 설명을 함께
+            볼 수 있어요.
           </p>
           <p className="info-panel__empty-hint">
-            먼저 수성이나 지구를 눌러 보고, 아래 조작 바에서 시간을 빠르게
-            바꿔 보세요.
+            먼저 수성이나 지구를 눌러 보고, 아래 조작 바에서 시간을 바꿔 가며
+            다시 살펴보세요.
           </p>
         </div>
       )}

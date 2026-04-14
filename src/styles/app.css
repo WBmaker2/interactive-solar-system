@@ -274,8 +274,18 @@ input {
 
 .info-panel__metrics dd {
   margin: 0.35rem 0 0;
-  font-size: 0.95rem;
+  display: grid;
+  gap: 0.3rem;
   color: #f4f7ff;
+}
+
+.info-panel__metric-value {
+  font-size: 0.95rem;
+}
+
+.info-panel__metric-note {
+  font-size: 0.86rem;
+  color: rgba(244, 247, 255, 0.72);
 }
 
 .info-panel__section-title {
@@ -715,7 +725,7 @@ input {
 
   .mobile-info-sheet__metrics {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 0.65rem;
     margin: 0;
   }
@@ -733,7 +743,18 @@ input {
 
   .mobile-info-sheet__metrics dd {
     margin: 0.28rem 0 0;
+    display: grid;
+    gap: 0.24rem;
+    color: #f4f7ff;
+  }
+
+  .mobile-info-sheet__metric-value {
     font-size: 0.88rem;
+  }
+
+  .mobile-info-sheet__metric-note {
+    font-size: 0.8rem;
+    color: rgba(244, 247, 255, 0.72);
   }
 
   .mobile-info-sheet__facts {

@@ -8,10 +8,10 @@ describe("PlanetInfoPanel", () => {
 
     expect(screen.getByRole("heading", { name: "행성을 눌러 보세요" })).toBeInTheDocument();
     expect(
-      screen.getByText(/아직 선택된 행성이 없습니다/i)
+      screen.getByText(/숫자와 쉬운 설명을 함께/i)
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/먼저 수성이나 지구를 눌러 보고/i)
+      screen.getByText(/시간을 바꿔 가며 다시 살펴보세요/i)
     ).toBeInTheDocument();
   });
 
@@ -25,8 +25,11 @@ describe("PlanetInfoPanel", () => {
     expect(screen.getByText("태양에 가장 가까워 빠르게 한 바퀴를 도는 행성이에요.")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "기초 수치" })).toBeInTheDocument();
     expect(screen.getByText("지구의 0.38배")).toBeInTheDocument();
+    expect(screen.getByText("지구보다 훨씬 작아요")).toBeInTheDocument();
     expect(screen.getByText("0.39 AU")).toBeInTheDocument();
+    expect(screen.getByText("태양에 아주 가까워요")).toBeInTheDocument();
     expect(screen.getByText("88일")).toBeInTheDocument();
+    expect(screen.getByText("한 바퀴 도는 데 아주 짧은 시간이 걸려요")).toBeInTheDocument();
     expect(screen.getByText("태양과 가장 가깝다")).toBeInTheDocument();
     expect(screen.getByText("이미지 출처")).toBeInTheDocument();
     expect(
