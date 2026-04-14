@@ -15,6 +15,7 @@ export interface MissionDefinition {
   id: string;
   goalType: MissionGoalType;
   prompt: string;
+  hint: string;
   targetPlanetId: PlanetId;
 }
 
