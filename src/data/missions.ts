@@ -25,7 +25,7 @@ export const missions: MissionDefinition[] = [
   {
     id: "earth-like-planet",
     goalType: "selectPlanet",
-    prompt: "지구와 비슷한 행성을 찾아보세요.",
+    prompt: "지구와 크기가 비슷한 행성을 찾아보세요.",
     hint: "지구와 크기가 아주 비슷한 행성을 떠올려 보세요.",
     targetPlanetId: "venus",
   },
