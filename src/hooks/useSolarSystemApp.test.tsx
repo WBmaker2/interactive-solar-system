@@ -93,6 +93,25 @@ describe("useSolarSystemApp", () => {
     expect(result.current.isCurrentMissionComplete).toBe(false);
   });
 
+  it("ignores null selection for mission advancement", () => {
+    const { result } = renderHook(() => useSolarSystemApp());
+
+    act(() => result.current.selectPlanet("mercury"));
+    act(() => result.current.selectPlanet(null));
+
+    expect(result.current.selectedPlanetId).toBeNull();
+    expect(result.current.completedMissionIds).toEqual([missions[0].id]);
+    expect(result.current.currentMissionIndex).toBe(0);
+    expect(result.current.currentMission?.id).toBe(missions[0].id);
+    expect(result.current.isCurrentMissionComplete).toBe(true);
+
+    act(() => result.current.selectPlanet("mercury"));
+
+    expect(result.current.currentMissionIndex).toBe(1);
+    expect(result.current.currentMission?.id).toBe(missions[1].id);
+    expect(result.current.isCurrentMissionComplete).toBe(false);
+  });
+
   it("wrong planet selection does not progress the mission", () => {
     const { result } = renderHook(() => useSolarSystemApp());
 

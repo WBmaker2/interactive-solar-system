@@ -79,6 +79,10 @@ export function useSolarSystemApp() {
   const selectPlanet = (planetId: PlanetId | null) => {
     setSelectedPlanetId(planetId);
 
+    if (planetId === null) {
+      return;
+    }
+
     setMissionProgress((currentProgress) => {
       let nextProgress = currentProgress;
 
@@ -88,10 +92,6 @@ export function useSolarSystemApp() {
           currentMissionIndex: Math.min(currentProgress.currentMissionIndex + 1, missions.length),
           shouldAdvanceMission: false,
         };
-      }
-
-      if (planetId === null) {
-        return nextProgress;
       }
 
       const mission = missions[nextProgress.currentMissionIndex] ?? null;
