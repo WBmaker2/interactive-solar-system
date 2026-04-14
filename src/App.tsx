@@ -10,11 +10,12 @@ import { useSolarSystemApp } from "./hooks/useSolarSystemApp";
 export default function App() {
   const {
     planets,
-    missions,
     angles,
     selectedPlanetId,
     isPlaying,
     speedMultiplier,
+    currentMission,
+    isCurrentMissionComplete,
     comparisonMode,
     isComparisonOpen,
     selectPlanet,
@@ -40,9 +41,14 @@ export default function App() {
           </div>
 
           <div className="mission-strip" aria-label="오늘의 미션">
-            {missions.map((mission, index) => (
-              <MissionChip key={mission} active={index === 0} label={mission} />
-            ))}
+            {currentMission ? (
+              <MissionChip
+                label={currentMission.prompt}
+                status={isCurrentMissionComplete ? "completed" : "active"}
+              />
+            ) : (
+              <p className="mission-strip__complete">모든 미션을 완료했어요.</p>
+            )}
           </div>
         </header>
 

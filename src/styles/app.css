@@ -80,13 +80,15 @@ input {
 }
 
 .mission-chip {
+  display: grid;
+  gap: 0.35rem;
+  width: fit-content;
+  max-width: min(100%, 44rem);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
+  border-radius: 1rem;
   background: rgba(14, 20, 36, 0.72);
   color: rgba(244, 247, 255, 0.88);
-  padding: 0.6rem 0.9rem;
-  font-size: 0.9rem;
-  line-height: 1;
+  padding: 0.85rem 1rem;
   backdrop-filter: blur(12px);
 }
 
@@ -94,6 +96,30 @@ input {
   border-color: rgba(255, 196, 95, 0.34);
   background: rgba(255, 196, 95, 0.14);
   color: #fff4d3;
+}
+
+.mission-chip--completed {
+  border-color: rgba(129, 222, 164, 0.34);
+  background: rgba(79, 187, 124, 0.14);
+  color: #dbffe8;
+}
+
+.mission-chip__status {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+.mission-chip__label {
+  font-size: 0.98rem;
+  line-height: 1.5;
+}
+
+.mission-strip__complete {
+  margin: 0;
+  color: rgba(244, 247, 255, 0.82);
+  font-size: 0.98rem;
 }
 
 .app-main {

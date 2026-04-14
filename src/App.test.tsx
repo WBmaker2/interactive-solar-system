@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { missions } from "./data/missions";
 import App from "./App";
 
 describe("태양계 앱 셸", () => {
@@ -9,6 +10,8 @@ describe("태양계 앱 셸", () => {
     expect(
       screen.getByRole("heading", { name: "내 손안의 우주" })
     ).toBeInTheDocument();
+    expect(screen.getByText(missions[0].prompt)).toBeInTheDocument();
+    expect(screen.getByText("진행 중")).toBeInTheDocument();
     expect(screen.getByRole("note", { name: "축척 안내" })).toBeInTheDocument();
     expect(
       screen.getByRole("region", { name: "태양계 관찰 무대" })

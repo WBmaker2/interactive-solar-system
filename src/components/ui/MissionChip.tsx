@@ -1,12 +1,18 @@
 interface MissionChipProps {
   label: string;
-  active?: boolean;
+  status?: "active" | "completed";
 }
 
-export default function MissionChip({ label, active = false }: MissionChipProps) {
+const statusLabels = {
+  active: "진행 중",
+  completed: "완료",
+};
+
+export default function MissionChip({ label, status = "active" }: MissionChipProps) {
   return (
-    <span className={`mission-chip${active ? " mission-chip--active" : ""}`}>
-      {label}
-    </span>
+    <div className={`mission-chip mission-chip--${status}`}>
+      <span className="mission-chip__status">{statusLabels[status]}</span>
+      <span className="mission-chip__label">{label}</span>
+    </div>
   );
 }
