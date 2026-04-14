@@ -23,20 +23,27 @@ function createInitialAngles() {
   return { ...initialAngles };
 }
 
+function createInitialMissionProgress() {
+  return {
+    currentMissionIndex: 0,
+    completedMissionIds: [] as string[],
+    shouldAdvanceMission: false,
+  };
+}
+
 export function useSolarSystemApp() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [speedMultiplier, setSpeedMultiplier] = useState(initialSpeedMultiplier);
   const [selectedPlanetId, setSelectedPlanetId] = useState<PlanetId | null>(null);
   const [comparisonMode, setComparisonMode] = useState<ComparisonMode>("size");
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
-  const [currentMissionIndex, setCurrentMissionIndex] = useState(0);
-  const [completedMissionIds, setCompletedMissionIds] = useState<string[]>([]);
+  const [missionProgress, setMissionProgress] = useState(createInitialMissionProgress);
   const [angles, setAngles] = useState<Record<PlanetId, number>>(createInitialAngles);
   const frameRef = useRef<number | null>(null);
   const previousTimeRef = useRef<number | null>(null);
-  const currentMission = missions[currentMissionIndex] ?? null;
+  const currentMission = missions[missionProgress.currentMissionIndex] ?? null;
   const isCurrentMissionComplete = currentMission
-    ? completedMissionIds.includes(currentMission.id)
+    ? missionProgress.completedMissionIds.includes(currentMission.id)
     : false;
 
   useEffect(() => {
@@ -72,22 +79,41 @@ export function useSolarSystemApp() {
   const selectPlanet = (planetId: PlanetId | null) => {
     setSelectedPlanetId(planetId);
 
-    if (planetId === null || currentMission === null) {
-      return;
-    }
+    setMissionProgress((currentProgress) => {
+      let nextProgress = currentProgress;
 
-    const evaluation = evaluateMission(currentMission, { selectedPlanetId: planetId });
+      if (currentProgress.shouldAdvanceMission) {
+        nextProgress = {
+          ...nextProgress,
+          currentMissionIndex: Math.min(currentProgress.currentMissionIndex + 1, missions.length),
+          shouldAdvanceMission: false,
+        };
+      }
 
-    if (!evaluation.isComplete) {
-      return;
-    }
+      if (planetId === null) {
+        return nextProgress;
+      }
 
-    setCompletedMissionIds((currentCompletedMissionIds) =>
-      currentCompletedMissionIds.includes(currentMission.id)
-        ? currentCompletedMissionIds
-        : [...currentCompletedMissionIds, currentMission.id],
-    );
-    setCurrentMissionIndex((index) => Math.min(index + 1, missions.length));
+      const mission = missions[nextProgress.currentMissionIndex] ?? null;
+
+      if (mission === null) {
+        return nextProgress;
+      }
+
+      const evaluation = evaluateMission(mission, { selectedPlanetId: planetId });
+
+      if (!evaluation.isComplete) {
+        return nextProgress;
+      }
+
+      return {
+        ...nextProgress,
+        completedMissionIds: nextProgress.completedMissionIds.includes(mission.id)
+          ? nextProgress.completedMissionIds
+          : [...nextProgress.completedMissionIds, mission.id],
+        shouldAdvanceMission: true,
+      };
+    });
   };
 
   const togglePlaying = () => {
@@ -101,8 +127,7 @@ export function useSolarSystemApp() {
     setIsComparisonOpen(false);
     setIsPlaying(true);
     setSpeedMultiplier(initialSpeedMultiplier);
-    setCurrentMissionIndex(0);
-    setCompletedMissionIds([]);
+    setMissionProgress(createInitialMissionProgress());
     previousTimeRef.current = null;
   };
 
@@ -125,8 +150,8 @@ export function useSolarSystemApp() {
     comparisonMode,
     isComparisonOpen,
     currentMission,
-    currentMissionIndex,
-    completedMissionIds,
+    currentMissionIndex: missionProgress.currentMissionIndex,
+    completedMissionIds: missionProgress.completedMissionIds,
     isCurrentMissionComplete,
     selectPlanet,
     togglePlaying,
