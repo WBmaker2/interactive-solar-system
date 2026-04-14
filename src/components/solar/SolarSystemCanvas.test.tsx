@@ -137,6 +137,59 @@ describe("SolarSystemCanvas", () => {
     expect(env.getScheduledFrameCount()).toBe(0);
   });
 
+  it("uses the latest speed multiplier for future animation frames", async () => {
+    const onPlanetSelect = vi.fn();
+
+    const { rerender } = render(
+      <SolarSystemCanvas
+        isPlaying
+        onPlanetSelect={onPlanetSelect}
+        planets={planets}
+        sceneResetVersion={0}
+        selectedPlanetId={null}
+        speedMultiplier={6}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(env.requestAnimationFrameMock).toHaveBeenCalledTimes(1);
+    });
+
+    env.flushAnimationFrame(1000);
+    env.flushAnimationFrame(2000);
+
+    rerender(
+      <SolarSystemCanvas
+        isPlaying
+        onPlanetSelect={onPlanetSelect}
+        planets={planets}
+        sceneResetVersion={0}
+        selectedPlanetId={null}
+        speedMultiplier={12}
+      />,
+    );
+
+    env.flushAnimationFrame(3000);
+    env.flushAnimationFrame(4000);
+
+    const expectedAngles = advanceAngles(
+      advanceAngles(createInitialAngles(), planets, 1000, 6),
+      planets,
+      1000,
+      12,
+    );
+    const expectedScene = buildScene(800, 600, planets, expectedAngles);
+    const mercury = expectedScene.scenePlanets.find(
+      (scenePlanet) => scenePlanet.planet.id === "mercury",
+    );
+
+    expect(mercury).toBeDefined();
+
+    clickPlanet((mercury?.x ?? 0) + 1, (mercury?.y ?? 0) + 1);
+
+    expect(onPlanetSelect).toHaveBeenCalledWith("mercury");
+  });
+
   it("restores the initial orbit positions after reset", async () => {
     const onPlanetSelect = vi.fn();
 
