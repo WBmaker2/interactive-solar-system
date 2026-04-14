@@ -1,6 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { missions } from "../data/missions";
 import { useSolarSystemApp } from "./useSolarSystemApp";
 
 type RafCallback = FrameRequestCallback;
@@ -49,6 +50,27 @@ describe("useSolarSystemApp", () => {
     expect(result.current.selectedPlanetId).toBe("mars");
     expect(result.current.comparisonMode).toBe("distance");
     expect(result.current.isComparisonOpen).toBe(true);
+  });
+
+  it("starts with the first mission active", () => {
+    const { result } = renderHook(() => useSolarSystemApp());
+
+    expect(result.current.currentMission?.id).toBe(missions[0].id);
+    expect(result.current.currentMissionIndex).toBe(0);
+    expect(result.current.completedMissionIds).toEqual([]);
+    expect(result.current.isCurrentMissionComplete).toBe(false);
+  });
+
+  it("selecting the correct planet completes mission and advances", () => {
+    const { result } = renderHook(() => useSolarSystemApp());
+
+    act(() => result.current.selectPlanet("mercury"));
+
+    expect(result.current.selectedPlanetId).toBe("mercury");
+    expect(result.current.completedMissionIds).toEqual([missions[0].id]);
+    expect(result.current.currentMissionIndex).toBe(1);
+    expect(result.current.currentMission?.id).toBe(missions[1].id);
+    expect(result.current.isCurrentMissionComplete).toBe(false);
   });
 
   it("advances angles while playing and pauses the loop when stopped", () => {
@@ -119,5 +141,9 @@ describe("useSolarSystemApp", () => {
       uranus: 260,
       neptune: 300,
     });
+    expect(result.current.currentMission?.id).toBe(missions[0].id);
+    expect(result.current.currentMissionIndex).toBe(0);
+    expect(result.current.completedMissionIds).toEqual([]);
+    expect(result.current.isCurrentMissionComplete).toBe(false);
   });
 });

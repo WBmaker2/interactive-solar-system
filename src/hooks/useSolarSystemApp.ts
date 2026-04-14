@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { missions } from "../data/missions";
 import { planets } from "../data/planets";
+import { evaluateMission } from "../lib/missions";
 import type { ComparisonMode, PlanetId } from "../types/solar-system";
 import { advanceAngles } from "../lib/orbits";
 
@@ -28,9 +29,15 @@ export function useSolarSystemApp() {
   const [selectedPlanetId, setSelectedPlanetId] = useState<PlanetId | null>(null);
   const [comparisonMode, setComparisonMode] = useState<ComparisonMode>("size");
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
+  const [currentMissionIndex, setCurrentMissionIndex] = useState(0);
+  const [completedMissionIds, setCompletedMissionIds] = useState<string[]>([]);
   const [angles, setAngles] = useState<Record<PlanetId, number>>(createInitialAngles);
   const frameRef = useRef<number | null>(null);
   const previousTimeRef = useRef<number | null>(null);
+  const currentMission = missions[currentMissionIndex] ?? null;
+  const isCurrentMissionComplete = currentMission
+    ? completedMissionIds.includes(currentMission.id)
+    : false;
 
   useEffect(() => {
     if (!isPlaying) {
@@ -64,6 +71,23 @@ export function useSolarSystemApp() {
 
   const selectPlanet = (planetId: PlanetId | null) => {
     setSelectedPlanetId(planetId);
+
+    if (planetId === null || currentMission === null) {
+      return;
+    }
+
+    const evaluation = evaluateMission(currentMission, { selectedPlanetId: planetId });
+
+    if (!evaluation.isComplete) {
+      return;
+    }
+
+    setCompletedMissionIds((currentCompletedMissionIds) =>
+      currentCompletedMissionIds.includes(currentMission.id)
+        ? currentCompletedMissionIds
+        : [...currentCompletedMissionIds, currentMission.id],
+    );
+    setCurrentMissionIndex((index) => Math.min(index + 1, missions.length));
   };
 
   const togglePlaying = () => {
@@ -77,6 +101,8 @@ export function useSolarSystemApp() {
     setIsComparisonOpen(false);
     setIsPlaying(true);
     setSpeedMultiplier(initialSpeedMultiplier);
+    setCurrentMissionIndex(0);
+    setCompletedMissionIds([]);
     previousTimeRef.current = null;
   };
 
@@ -98,6 +124,10 @@ export function useSolarSystemApp() {
     selectedPlanetId,
     comparisonMode,
     isComparisonOpen,
+    currentMission,
+    currentMissionIndex,
+    completedMissionIds,
+    isCurrentMissionComplete,
     selectPlanet,
     togglePlaying,
     setSpeedMultiplier,
