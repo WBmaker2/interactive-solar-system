@@ -92,13 +92,13 @@ describe("useSolarSystemApp", () => {
     const { result } = renderHook(() => useSolarSystemApp());
 
     expect(result.current.isPlaying).toBe(true);
-    expect(result.current.speedMultiplier).toBe(6);
+    expect(result.current.speedMultiplier).toBe(1);
 
     act(() => result.current.togglePlaying());
-    act(() => result.current.setSpeedMultiplier(12));
+    act(() => result.current.setSpeedMultiplier(0.5));
 
     expect(result.current.isPlaying).toBe(false);
-    expect(result.current.speedMultiplier).toBe(12);
+    expect(result.current.speedMultiplier).toBe(0.5);
   });
 
   it("resets the scene deterministically without reloading", () => {
@@ -107,7 +107,7 @@ describe("useSolarSystemApp", () => {
     act(() => result.current.selectPlanet("mercury"));
     act(() => result.current.openComparison("distance"));
     act(() => result.current.togglePlaying());
-    act(() => result.current.setSpeedMultiplier(12));
+    act(() => result.current.setSpeedMultiplier(10));
     const resetVersionBefore = result.current.sceneResetVersion;
     expect(result.current.isCurrentMissionComplete).toBe(true);
     act(() => result.current.resetScene());
@@ -116,7 +116,7 @@ describe("useSolarSystemApp", () => {
     expect(result.current.comparisonMode).toBe("size");
     expect(result.current.isComparisonOpen).toBe(false);
     expect(result.current.isPlaying).toBe(true);
-    expect(result.current.speedMultiplier).toBe(6);
+    expect(result.current.speedMultiplier).toBe(1);
     expect(result.current.currentMission?.id).toBe(missions[0].id);
     expect(result.current.currentMissionIndex).toBe(0);
     expect(result.current.completedMissionIds).toEqual([]);

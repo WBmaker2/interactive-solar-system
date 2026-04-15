@@ -18,7 +18,7 @@ function createHookState(overrides: Partial<ReturnType<typeof mockUseSolarSystem
     planets,
     selectedPlanetId: null,
     isPlaying: true,
-    speedMultiplier: 6,
+    speedMultiplier: 1,
     currentMission: missions[0],
     isCurrentMissionComplete: false,
     comparisonMode: "size" as ComparisonMode,

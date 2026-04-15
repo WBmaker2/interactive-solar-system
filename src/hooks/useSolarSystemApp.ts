@@ -3,9 +3,8 @@ import { useState } from "react";
 import { missions } from "../data/missions";
 import { planets } from "../data/planets";
 import { evaluateMission } from "../lib/missions";
+import { defaultSpeedMultiplier } from "../lib/speed-options";
 import type { ComparisonMode, PlanetId } from "../types/solar-system";
-
-const initialSpeedMultiplier = 6;
 
 function createInitialMissionProgress() {
   return {
@@ -17,7 +16,7 @@ function createInitialMissionProgress() {
 
 export function useSolarSystemApp() {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [speedMultiplier, setSpeedMultiplier] = useState(initialSpeedMultiplier);
+  const [speedMultiplier, setSpeedMultiplier] = useState(defaultSpeedMultiplier);
   const [selectedPlanetId, setSelectedPlanetId] = useState<PlanetId | null>(null);
   const [comparisonMode, setComparisonMode] = useState<ComparisonMode>("size");
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
@@ -77,7 +76,7 @@ export function useSolarSystemApp() {
     setComparisonMode("size");
     setIsComparisonOpen(false);
     setIsPlaying(true);
-    setSpeedMultiplier(initialSpeedMultiplier);
+    setSpeedMultiplier(defaultSpeedMultiplier);
     setMissionProgress(createInitialMissionProgress());
     setSceneResetVersion((version) => version + 1);
   };

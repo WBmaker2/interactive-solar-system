@@ -1,4 +1,10 @@
 import type { ComparisonMode } from "../../types/solar-system";
+import {
+  formatSpeedMultiplier,
+  getSpeedMultiplierFromSliderValue,
+  getSpeedSliderValue,
+  speedOptions,
+} from "../../lib/speed-options";
 
 interface ControlBarProps {
   isPlaying: boolean;
@@ -10,10 +16,6 @@ interface ControlBarProps {
   onOpenMotionGuide: () => void;
 }
 
-function formatSpeedValue(value: number) {
-  return `x${value}`;
-}
-
 export default function ControlBar({
   isPlaying,
   speedMultiplier,
@@ -23,6 +25,8 @@ export default function ControlBar({
   onOpenComparison,
   onOpenMotionGuide,
 }: ControlBarProps) {
+  const sliderValue = getSpeedSliderValue(speedMultiplier);
+
   return (
     <footer className="control-bar" aria-label="태양계 조작 바">
       <div className="control-bar__actions">
@@ -61,17 +65,21 @@ export default function ControlBar({
 
       <label className="speed-control" htmlFor="time-speed">
         <span className="speed-control__label">시간 빨리 감기</span>
-        <span className="speed-control__value">{formatSpeedValue(speedMultiplier)}</span>
+        <span className="speed-control__value">
+          {formatSpeedMultiplier(speedMultiplier)}
+        </span>
         <input
           id="time-speed"
           aria-label="시간 빨리 감기"
           className="speed-control__input"
-          min="1"
-          max="20"
+          min="0"
+          max={String(speedOptions.length - 1)}
           step="1"
           type="range"
-          value={speedMultiplier}
-          onChange={(event) => onSpeedChange(Number(event.currentTarget.value))}
+          value={sliderValue}
+          onChange={(event) =>
+            onSpeedChange(getSpeedMultiplierFromSliderValue(Number(event.currentTarget.value)))
+          }
         />
       </label>
     </footer>

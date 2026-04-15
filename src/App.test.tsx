@@ -25,9 +25,10 @@ describe("태양계 앱 셸", () => {
     expect(screen.getByRole("button", { name: "자전과 공전" })).toBeInTheDocument();
 
     const slider = screen.getByRole("slider", { name: "시간 빨리 감기" });
-    expect(slider).toHaveAttribute("min", "1");
-    expect(slider).toHaveAttribute("max", "20");
-    expect(slider).toHaveValue("6");
+    expect(slider).toHaveAttribute("min", "0");
+    expect(slider).toHaveAttribute("max", "11");
+    expect(slider).toHaveValue("2");
+    expect(screen.getByText("x1")).toBeInTheDocument();
     expect(
       screen.getByRole("complementary", { name: "행성 정보 바텀 시트" })
     ).toBeInTheDocument();
