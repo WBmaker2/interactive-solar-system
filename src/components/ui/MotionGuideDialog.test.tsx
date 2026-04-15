@@ -18,7 +18,7 @@ describe("MotionGuideDialog", () => {
   });
 
   it("shows the rotation and orbit learning cards with contextual text", () => {
-    render(
+    const { container } = render(
       <MotionGuideDialog
         isOpen={true}
         onClose={vi.fn()}
@@ -31,6 +31,11 @@ describe("MotionGuideDialog", () => {
     expect(screen.getByText("행성이 태양 주위를 도는 것")).toBeInTheDocument();
     expect(
       screen.getByText("지구는 자전으로 낮과 밤이 생기고, 공전으로 1년이 생겨요.")
+    ).toBeInTheDocument();
+    expect(container.querySelector(".motion-guide__planet-surface")).toBeInTheDocument();
+    expect(container.querySelector(".motion-guide__orbit-rotator")).toBeInTheDocument();
+    expect(
+      container.querySelector(".motion-guide__orbit-rotator .motion-guide__orbit-planet")
     ).toBeInTheDocument();
   });
 

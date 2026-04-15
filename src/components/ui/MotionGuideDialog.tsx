@@ -125,7 +125,10 @@ export default function MotionGuideDialog({
         <div className="motion-guide__cards">
           <article className="motion-guide__card">
             <div className="motion-guide__visual motion-guide__visual--spin" aria-hidden="true">
-              <span className="motion-guide__planet" />
+              <span className="motion-guide__planet motion-guide__planet--spin">
+                <span className="motion-guide__planet-surface" />
+                <span className="motion-guide__planet-highlight" />
+              </span>
               <span className="motion-guide__axis" />
             </div>
             <h3>자전</h3>
@@ -136,7 +139,9 @@ export default function MotionGuideDialog({
             <div className="motion-guide__visual motion-guide__visual--orbit" aria-hidden="true">
               <span className="motion-guide__sun" />
               <span className="motion-guide__orbit-ring" />
-              <span className="motion-guide__orbit-planet" />
+              <span className="motion-guide__orbit-rotator">
+                <span className="motion-guide__orbit-planet" />
+              </span>
             </div>
             <h3>공전</h3>
             <p>행성이 태양 주위를 도는 것</p>
