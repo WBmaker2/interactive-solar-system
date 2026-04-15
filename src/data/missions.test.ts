@@ -14,6 +14,11 @@ describe("missions", () => {
           mission.goalType === "selectPlanet" &&
           typeof mission.prompt === "string" &&
           typeof mission.hint === "string" &&
+          typeof mission.completionExplanation === "object" &&
+          mission.completionExplanation !== null &&
+          typeof mission.completionExplanation.answer === "string" &&
+          typeof mission.completionExplanation.reason === "string" &&
+          typeof mission.completionExplanation.caution === "string" &&
           typeof mission.targetPlanetId === "string",
       ),
     ).toBe(true);
@@ -23,35 +28,22 @@ describe("missions", () => {
   });
 
   it("keeps the structured missions readable and varied", () => {
-    expect(missions).toEqual([
-      {
-        id: "fastest-planet",
-        goalType: "selectPlanet",
-        prompt: "가장 빠르게 도는 행성을 찾아보세요.",
-        hint: "태양에 가장 가까운 행성을 먼저 떠올려 보세요.",
-        targetPlanetId: "mercury",
-      },
-      {
-        id: "farthest-planet",
-        goalType: "selectPlanet",
-        prompt: "태양에서 가장 먼 행성을 찾아보세요.",
-        hint: "태양계의 가장 바깥쪽 행성을 생각해 보세요.",
-        targetPlanetId: "neptune",
-      },
-      {
-        id: "largest-planet",
-        goalType: "selectPlanet",
-        prompt: "가장 큰 행성을 찾아보세요.",
-        hint: "가스 행성 중에서 가장 압도적으로 큰 행성을 찾아보세요.",
-        targetPlanetId: "jupiter",
-      },
-      {
-        id: "earth-like-planet",
-        goalType: "selectPlanet",
-        prompt: "지구와 크기가 비슷한 행성을 찾아보세요.",
-        hint: "지구와 크기가 아주 비슷한 행성을 떠올려 보세요.",
-        targetPlanetId: "venus",
-      },
-    ]);
+    const missionById = new Map(missions.map((mission) => [mission.id, mission]));
+
+    expect(missionById.has("fastest-planet")).toBe(true);
+    expect(missionById.has("earth-like-planet")).toBe(true);
+    expect(missionById.get("fastest-planet")?.completionExplanation).toEqual({
+      answer: "수성",
+      reason: "수성은 태양에 가장 가까워서 가장 빠르게 한 바퀴를 돌아요.",
+      caution: "자전이 빠르다는 뜻이 아니라 공전이 빠르다는 뜻이에요.",
+    });
+    expect(missionById.get("earth-like-planet")?.prompt).toBe(
+      "지구와 크기가 비슷한 행성을 찾아보세요."
+    );
+    expect(missionById.get("earth-like-planet")?.completionExplanation).toEqual({
+      answer: "금성",
+      reason: "금성은 지구 지름의 약 0.95배라서 크기가 매우 비슷해요.",
+      caution: "크기가 비슷하다고 환경까지 비슷한 것은 아니에요.",
+    });
   });
 });

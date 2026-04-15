@@ -22,6 +22,7 @@ describe("태양계 앱 셸", () => {
     expect(screen.getByRole("heading", { name: "행성을 눌러 보세요" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "일시정지" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "비교 보기" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "자전과 공전" })).toBeInTheDocument();
 
     const slider = screen.getByRole("slider", { name: "시간 빨리 감기" });
     expect(slider).toHaveAttribute("min", "1");
@@ -47,6 +48,24 @@ describe("태양계 앱 셸", () => {
 
     expect(
       screen.queryByRole("heading", { name: "크기 비교" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("opens and closes the rotation and orbit guide", async () => {
+    const user = userEvent.setup();
+
+    render(<App />);
+
+    await user.click(screen.getByRole("button", { name: "자전과 공전" }));
+
+    expect(screen.getByRole("heading", { name: "자전과 공전" })).toBeInTheDocument();
+    expect(screen.getByText("행성이 스스로 도는 것")).toBeInTheDocument();
+    expect(screen.getByText("행성이 태양 주위를 도는 것")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "닫기" }));
+
+    expect(
+      screen.queryByRole("heading", { name: "자전과 공전" })
     ).not.toBeInTheDocument();
   });
 });

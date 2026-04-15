@@ -116,6 +116,36 @@ input {
   line-height: 1.5;
 }
 
+.mission-chip__explanation {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.35rem;
+  padding: 0.85rem 0.95rem;
+  border-radius: 0.95rem;
+  background: rgba(14, 28, 49, 0.78);
+  border: 1px solid rgba(124, 199, 255, 0.18);
+}
+
+.mission-chip__explanation-row {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.mission-chip__explanation-term {
+  margin: 0;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(127, 181, 255, 0.96);
+}
+
+.mission-chip__explanation-detail {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.5;
+  color: #f3f8ff;
+}
+
 .mission-strip__complete {
   margin: 0;
   color: rgba(244, 247, 255, 0.82);
@@ -414,6 +444,86 @@ input {
   margin-top: 1rem;
 }
 
+.comparison-sheet__preset-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.comparison-sheet__preset {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(244, 247, 255, 0.8);
+  padding: 0.5rem 0.85rem;
+  cursor: pointer;
+}
+
+.comparison-sheet__preset[aria-pressed="true"] {
+  border-color: rgba(124, 199, 255, 0.3);
+  background: rgba(124, 199, 255, 0.14);
+  color: #f3f8ff;
+}
+
+.comparison-sheet__spotlight {
+  margin-top: 0.9rem;
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.comparison-sheet__spotlight-planets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.comparison-sheet__spotlight-planet {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: center;
+}
+
+.comparison-sheet__spotlight-stage {
+  width: 100%;
+  min-height: 8rem;
+  display: grid;
+  place-items: end center;
+}
+
+.comparison-sheet__spotlight-visual {
+  display: block;
+  border-radius: 999px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 0 24px rgba(124, 199, 255, 0.16);
+}
+
+.comparison-sheet__spotlight-label,
+.comparison-sheet__spotlight-value,
+.comparison-sheet__spotlight-caption {
+  margin: 0;
+}
+
+.comparison-sheet__spotlight-label {
+  font-weight: 600;
+}
+
+.comparison-sheet__spotlight-value {
+  font-size: 0.86rem;
+  color: rgba(244, 247, 255, 0.72);
+}
+
+.comparison-sheet__spotlight-caption {
+  color: rgba(244, 247, 255, 0.84);
+  line-height: 1.6;
+}
+
 .comparison-sheet__list {
   display: grid;
   gap: 0.85rem;
@@ -469,6 +579,157 @@ input {
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, rgba(255, 196, 95, 0.92), rgba(124, 199, 255, 0.84));
+}
+
+.motion-guide {
+  position: fixed;
+  inset: 0;
+  z-index: 32;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.motion-guide__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 5, 11, 0.72);
+  backdrop-filter: blur(6px);
+}
+
+.motion-guide__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 46rem);
+  border-radius: 1.4rem;
+  padding: 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background:
+    radial-gradient(circle at top left, rgba(124, 199, 255, 0.14), transparent 28%),
+    rgba(10, 16, 30, 0.96);
+  box-shadow: 0 28px 110px rgba(0, 0, 0, 0.45);
+}
+
+.motion-guide__header {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.motion-guide__heading {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.motion-guide__eyebrow {
+  margin: 0;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(244, 247, 255, 0.55);
+}
+
+.motion-guide__heading h2,
+.motion-guide__card h3 {
+  margin: 0;
+}
+
+.motion-guide__lead,
+.motion-guide__card p,
+.motion-guide__context {
+  margin: 0;
+  color: rgba(244, 247, 255, 0.82);
+  line-height: 1.6;
+}
+
+.motion-guide__close {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f4f7ff;
+  padding: 0.65rem 0.9rem;
+  cursor: pointer;
+}
+
+.motion-guide__cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 1rem;
+}
+
+.motion-guide__card {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.motion-guide__visual {
+  position: relative;
+  min-height: 8.5rem;
+  border-radius: 1rem;
+  background: rgba(4, 9, 18, 0.5);
+  overflow: hidden;
+}
+
+.motion-guide__visual--spin,
+.motion-guide__visual--orbit {
+  display: grid;
+  place-items: center;
+}
+
+.motion-guide__planet {
+  width: 3.8rem;
+  height: 3.8rem;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #9fdfff, #2f7cf2 68%, #0f2d63);
+  animation: motion-guide-spin 5s linear infinite;
+}
+
+.motion-guide__axis {
+  position: absolute;
+  width: 0.18rem;
+  height: 5.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.36);
+}
+
+.motion-guide__sun {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, #ffe8a4, #ffb83d 70%, #d17614);
+  box-shadow: 0 0 22px rgba(255, 196, 95, 0.35);
+}
+
+.motion-guide__orbit-ring {
+  position: absolute;
+  width: 6.8rem;
+  height: 6.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.motion-guide__orbit-planet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: -0.6rem;
+  border-radius: 999px;
+  background: #7cc7ff;
+  transform-origin: 0 3.4rem;
+  animation: motion-guide-orbit 6s linear infinite;
+}
+
+.motion-guide__context {
+  margin-top: 1rem;
+  padding-left: 0.85rem;
+  border-left: 3px solid rgba(124, 199, 255, 0.34);
 }
 
 .scale-notice__label {
@@ -818,5 +1079,55 @@ input {
 
   .comparison-sheet__value {
     grid-column: 1 / -1;
+  }
+
+  .comparison-sheet__spotlight-planets {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .comparison-sheet__spotlight-stage {
+    min-height: 6.4rem;
+  }
+
+  .motion-guide {
+    padding: 0.5rem;
+    align-items: end;
+  }
+
+  .motion-guide__panel {
+    width: 100%;
+    border-radius: 1.25rem 1.25rem 0 0;
+  }
+
+  .motion-guide__header {
+    flex-direction: column;
+  }
+
+  .motion-guide__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .motion-guide__visual {
+    min-height: 6.6rem;
+  }
+}
+
+@keyframes motion-guide-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes motion-guide-orbit {
+  from {
+    transform: rotate(0deg) translateY(-3.4rem);
+  }
+
+  to {
+    transform: rotate(360deg) translateY(-3.4rem);
   }
 }

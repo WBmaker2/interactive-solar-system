@@ -1,13 +1,17 @@
+import { useState } from "react";
+
 import SolarSystemCanvas from "./components/solar/SolarSystemCanvas";
 import ComparisonSheet from "./components/ui/ComparisonSheet";
 import ControlBar from "./components/ui/ControlBar";
 import MissionChip from "./components/ui/MissionChip";
 import MobileInfoSheet from "./components/ui/MobileInfoSheet";
+import MotionGuideDialog from "./components/ui/MotionGuideDialog";
 import PlanetInfoPanel from "./components/ui/PlanetInfoPanel";
 import ScaleNotice from "./components/ui/ScaleNotice";
 import { useSolarSystemApp } from "./hooks/useSolarSystemApp";
 
 export default function App() {
+  const [isMotionGuideOpen, setIsMotionGuideOpen] = useState(false);
   const {
     planets,
     selectedPlanetId,
@@ -27,10 +31,11 @@ export default function App() {
   } = useSolarSystemApp();
   const selectedPlanet =
     planets.find((planet) => planet.id === selectedPlanetId) ?? null;
+  const isOverlayOpen = isComparisonOpen || isMotionGuideOpen;
 
   return (
     <div className="app-shell">
-      <div aria-hidden={isComparisonOpen} className="app-shell__content">
+      <div aria-hidden={isOverlayOpen} className="app-shell__content">
         <header className="app-header">
           <div className="app-header__copy">
             <p className="app-header__eyebrow">5~6학년 과학</p>
@@ -40,10 +45,18 @@ export default function App() {
             </p>
           </div>
 
-          <div className="mission-strip" aria-label="오늘의 미션">
+          <div
+            className="mission-strip"
+            aria-label="오늘의 미션"
+            aria-live="polite"
+            aria-atomic="true"
+          >
             {currentMission ? (
               <MissionChip
                 label={currentMission.prompt}
+                explanation={
+                  isCurrentMissionComplete ? currentMission.completionExplanation : undefined
+                }
                 status={isCurrentMissionComplete ? "completed" : "active"}
               />
             ) : (
@@ -73,6 +86,7 @@ export default function App() {
         <ControlBar
           isPlaying={isPlaying}
           onOpenComparison={openComparison}
+          onOpenMotionGuide={() => setIsMotionGuideOpen(true)}
           onReset={resetScene}
           onSpeedChange={setSpeedMultiplier}
           onTogglePlaying={togglePlaying}
@@ -86,6 +100,11 @@ export default function App() {
         onClose={closeComparison}
         onModeChange={openComparison}
         planets={planets}
+      />
+      <MotionGuideDialog
+        isOpen={isMotionGuideOpen}
+        onClose={() => setIsMotionGuideOpen(false)}
+        planet={selectedPlanet}
       />
     </div>
   );

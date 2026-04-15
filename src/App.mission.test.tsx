@@ -50,8 +50,16 @@ describe("App mission strip", () => {
 
     render(<App />);
 
+    expect(screen.getByLabelText("오늘의 미션")).toHaveAttribute("aria-live", "polite");
+    expect(screen.getByLabelText("오늘의 미션")).toHaveAttribute("aria-atomic", "true");
     expect(screen.getByText("완료")).toBeInTheDocument();
     expect(screen.getByText(missions[0].prompt)).toBeInTheDocument();
+    expect(screen.getByText("정답")).toBeInTheDocument();
+    expect(screen.getByText("왜 그럴까요?")).toBeInTheDocument();
+    expect(screen.getByText("헷갈리기 쉬운 점")).toBeInTheDocument();
+    expect(screen.getByText(missions[0].completionExplanation.answer)).toBeInTheDocument();
+    expect(screen.getByText(missions[0].completionExplanation.reason)).toBeInTheDocument();
+    expect(screen.getByText(missions[0].completionExplanation.caution)).toBeInTheDocument();
   });
 
   it("shows the all-clear message when no mission is left", () => {
@@ -67,5 +75,20 @@ describe("App mission strip", () => {
     expect(screen.getByText("모든 미션을 완료했어요.")).toBeInTheDocument();
     expect(screen.queryByText("진행 중")).not.toBeInTheDocument();
     expect(screen.queryByText("완료")).not.toBeInTheDocument();
+  });
+
+  it("keeps the explanation hidden while the mission is still active", () => {
+    mockUseSolarSystemApp.mockReturnValue(
+      createHookState({
+        currentMission: missions[3],
+        isCurrentMissionComplete: false,
+      }),
+    );
+
+    render(<App />);
+
+    expect(screen.getByText("진행 중")).toBeInTheDocument();
+    expect(screen.getByText(missions[3].prompt)).toBeInTheDocument();
+    expect(screen.queryByText("정답")).not.toBeInTheDocument();
   });
 });

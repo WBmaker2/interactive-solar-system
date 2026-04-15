@@ -35,6 +35,58 @@ describe("ComparisonSheet", () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
+  it("shows size presets and updates the side-by-side spotlight", async () => {
+    const user = userEvent.setup();
+
+    render(
+      <ComparisonSheet
+        isOpen={true}
+        mode="size"
+        onClose={vi.fn()}
+        onModeChange={vi.fn()}
+        planets={planets}
+      />
+    );
+
+    expect(
+      screen.getByRole("group", { name: "대표 크기 비교" })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "지구와 금성" })
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("region", { name: "나란히 크기 비교" })
+    ).toHaveTextContent("금성은 지구와 거의 비슷한 크기예요.");
+
+    await user.click(screen.getByRole("button", { name: "지구와 목성" }));
+
+    expect(
+      screen.getByRole("button", { name: "지구와 목성" })
+    ).toHaveAttribute("aria-pressed", "true");
+    expect(
+      screen.getByRole("region", { name: "나란히 크기 비교" })
+    ).toHaveTextContent("목성은 지구보다 훨씬 커서 가장 큰 행성이에요.");
+  });
+
+  it("hides size presets when distance mode is active", () => {
+    render(
+      <ComparisonSheet
+        isOpen={true}
+        mode="distance"
+        onClose={vi.fn()}
+        onModeChange={vi.fn()}
+        planets={planets}
+      />
+    );
+
+    expect(
+      screen.queryByRole("group", { name: "대표 크기 비교" })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("region", { name: "나란히 크기 비교" })
+    ).not.toBeInTheDocument();
+  });
+
   it("closes when Escape is pressed", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

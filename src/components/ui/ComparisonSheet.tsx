@@ -1,9 +1,14 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useState, type CSSProperties, useRef } from "react";
 
-import { buildComparisonRows } from "../../lib/comparisons";
+import {
+  buildComparisonRows,
+  buildSizeComparisonSpotlight,
+  sizeComparisonPresets,
+} from "../../lib/comparisons";
 import type {
   ComparisonMode,
   PlanetRecord,
+  SizeComparisonPresetId,
 } from "../../types/solar-system";
 
 interface ComparisonSheetProps {
@@ -30,6 +35,8 @@ export default function ComparisonSheet({
   onClose,
   onModeChange,
 }: ComparisonSheetProps) {
+  const [activePresetId, setActivePresetId] =
+    useState<SizeComparisonPresetId>("earth-venus");
   const dialogRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -100,6 +107,8 @@ export default function ComparisonSheet({
   const rows = buildComparisonRows(planets, mode);
   const maxValue = rows.reduce((maximum, row) => Math.max(maximum, row.value), 0) || 1;
   const activeLabel = getModeLabel(mode);
+  const sizeSpotlight =
+    mode === "size" ? buildSizeComparisonSpotlight(planets, activePresetId) : null;
 
   return (
     <aside
@@ -155,6 +164,60 @@ export default function ComparisonSheet({
         </div>
 
         <div className="comparison-sheet__body" role="tabpanel" aria-label={activeLabel}>
+          {mode === "size" && sizeSpotlight ? (
+            <>
+              <div
+                className="comparison-sheet__preset-group"
+                role="group"
+                aria-label="대표 크기 비교"
+              >
+                {sizeComparisonPresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    className="comparison-sheet__preset"
+                    aria-pressed={preset.id === activePresetId}
+                    onClick={() => setActivePresetId(preset.id)}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+
+              <section className="comparison-sheet__spotlight" aria-label="나란히 크기 비교">
+                <div className="comparison-sheet__spotlight-planets">
+                  {sizeSpotlight.planets.map((planet) => {
+                    const visualSizeRem = 1.6 + (planet.scalePercentage / 100) * 5.8;
+                    const visualStyle = {
+                      width: `${visualSizeRem}rem`,
+                      height: `${visualSizeRem}rem`,
+                      background: planet.color,
+                    } satisfies CSSProperties;
+
+                    return (
+                      <article key={planet.id} className="comparison-sheet__spotlight-planet">
+                        <div className="comparison-sheet__spotlight-stage">
+                          <span
+                            className="comparison-sheet__spotlight-visual"
+                            style={visualStyle}
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <p className="comparison-sheet__spotlight-label">{planet.label}</p>
+                        <p className="comparison-sheet__spotlight-value">
+                          지구의 {formatValue(planet.diameterEarths)}배
+                        </p>
+                      </article>
+                    );
+                  })}
+                </div>
+                <p className="comparison-sheet__spotlight-caption">
+                  {sizeSpotlight.caption}
+                </p>
+              </section>
+            </>
+          ) : null}
+
           <ol className="comparison-sheet__list">
             {rows.map((row, index) => {
               const percentage = (row.value / maxValue) * 100;

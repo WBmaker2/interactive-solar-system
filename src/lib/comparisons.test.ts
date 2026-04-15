@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { planets } from "../data/planets";
-import { buildComparisonRows } from "./comparisons";
+import {
+  buildComparisonRows,
+  buildSizeComparisonSpotlight,
+  sizeComparisonPresets,
+} from "./comparisons";
 
 describe("buildComparisonRows", () => {
   it("sorts planets by size and preserves label/value output", () => {
@@ -61,5 +65,19 @@ describe("buildComparisonRows", () => {
       label: "수성",
       value: 0.39,
     });
+  });
+});
+
+describe("buildSizeComparisonSpotlight", () => {
+  it("builds the default earth-vs-venus spotlight with scaled values", () => {
+    const spotlight = buildSizeComparisonSpotlight(planets, "earth-venus");
+
+    expect(sizeComparisonPresets.some((preset) => preset.id === "earth-venus")).toBe(
+      true
+    );
+    expect(spotlight.planets.map((planet) => planet.id)).toEqual(["earth", "venus"]);
+    expect(spotlight.planets[0].scalePercentage).toBe(100);
+    expect(spotlight.planets[1].scalePercentage).toBe(95);
+    expect(spotlight.caption).toBe("금성은 지구와 거의 비슷한 크기예요.");
   });
 });

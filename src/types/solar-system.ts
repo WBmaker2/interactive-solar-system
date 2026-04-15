@@ -9,13 +9,25 @@ export type PlanetId =
   | "neptune";
 
 export type ComparisonMode = "size" | "distance";
+export type SizeComparisonPresetId =
+  | "earth-venus"
+  | "earth-jupiter"
+  | "rocky-planets"
+  | "outer-giants";
 export type MissionGoalType = "selectPlanet";
+
+export interface MissionCompletionExplanation {
+  answer: string;
+  reason: string;
+  caution: string;
+}
 
 export interface MissionDefinition {
   id: string;
   goalType: MissionGoalType;
   prompt: string;
   hint: string;
+  completionExplanation: MissionCompletionExplanation;
   targetPlanetId: PlanetId;
 }
 
@@ -51,4 +63,24 @@ export interface ComparisonRow {
   id: PlanetId;
   label: string;
   value: number;
+}
+
+export interface SizeComparisonPreset {
+  id: SizeComparisonPresetId;
+  label: string;
+  planetIds: PlanetId[];
+  caption: string;
+}
+
+export interface SizeComparisonSpotlightPlanet {
+  id: PlanetId;
+  label: string;
+  color: string;
+  diameterEarths: number;
+  scalePercentage: number;
+}
+
+export interface SizeComparisonSpotlight {
+  caption: string;
+  planets: SizeComparisonSpotlightPlanet[];
 }

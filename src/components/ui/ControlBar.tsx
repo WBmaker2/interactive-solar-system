@@ -7,6 +7,7 @@ interface ControlBarProps {
   onSpeedChange: (speedMultiplier: number) => void;
   onReset: () => void;
   onOpenComparison: (mode: ComparisonMode) => void;
+  onOpenMotionGuide: () => void;
 }
 
 function formatSpeedValue(value: number) {
@@ -20,6 +21,7 @@ export default function ControlBar({
   onSpeedChange,
   onReset,
   onOpenComparison,
+  onOpenMotionGuide,
 }: ControlBarProps) {
   return (
     <footer className="control-bar" aria-label="태양계 조작 바">
@@ -46,6 +48,14 @@ export default function ControlBar({
           onClick={() => onOpenComparison("size")}
         >
           비교 보기
+        </button>
+
+        <button
+          type="button"
+          className="control-bar__button"
+          onClick={onOpenMotionGuide}
+        >
+          자전과 공전
         </button>
       </div>
 
