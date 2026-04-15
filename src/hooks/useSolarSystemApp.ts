@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { missions } from "../data/missions";
 import { planets } from "../data/planets";
@@ -10,9 +10,10 @@ function createInitialMissionProgress() {
   return {
     currentMissionIndex: 0,
     completedMissionIds: [] as string[],
-    shouldAdvanceMission: false,
   };
 }
+
+const missionAutoAdvanceDelayMs = 10_000;
 
 export function useSolarSystemApp() {
   const [isPlaying, setIsPlaying] = useState(true);
@@ -27,6 +28,36 @@ export function useSolarSystemApp() {
     ? missionProgress.completedMissionIds.includes(currentMission.id)
     : false;
 
+  useEffect(() => {
+    if (currentMission === null || !isCurrentMissionComplete) {
+      return;
+    }
+
+    const completedMissionId = currentMission.id;
+    const timeoutId = window.setTimeout(() => {
+      setMissionProgress((currentProgress) => {
+        const missionAtCurrentIndex = missions[currentProgress.currentMissionIndex] ?? null;
+
+        if (
+          missionAtCurrentIndex === null ||
+          missionAtCurrentIndex.id !== completedMissionId ||
+          !currentProgress.completedMissionIds.includes(completedMissionId)
+        ) {
+          return currentProgress;
+        }
+
+        return {
+          ...currentProgress,
+          currentMissionIndex: Math.min(currentProgress.currentMissionIndex + 1, missions.length),
+        };
+      });
+    }, missionAutoAdvanceDelayMs);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [currentMission, isCurrentMissionComplete]);
+
   const selectPlanet = (planetId: PlanetId | null) => {
     setSelectedPlanetId(planetId);
 
@@ -35,34 +66,25 @@ export function useSolarSystemApp() {
     }
 
     setMissionProgress((currentProgress) => {
-      let nextProgress = currentProgress;
-
-      if (currentProgress.shouldAdvanceMission) {
-        nextProgress = {
-          ...nextProgress,
-          currentMissionIndex: Math.min(currentProgress.currentMissionIndex + 1, missions.length),
-          shouldAdvanceMission: false,
-        };
-      }
-
-      const mission = missions[nextProgress.currentMissionIndex] ?? null;
+      const mission = missions[currentProgress.currentMissionIndex] ?? null;
 
       if (mission === null) {
-        return nextProgress;
+        return currentProgress;
+      }
+
+      if (currentProgress.completedMissionIds.includes(mission.id)) {
+        return currentProgress;
       }
 
       const evaluation = evaluateMission(mission, { selectedPlanetId: planetId });
 
       if (!evaluation.isComplete) {
-        return nextProgress;
+        return currentProgress;
       }
 
       return {
-        ...nextProgress,
-        completedMissionIds: nextProgress.completedMissionIds.includes(mission.id)
-          ? nextProgress.completedMissionIds
-          : [...nextProgress.completedMissionIds, mission.id],
-        shouldAdvanceMission: true,
+        ...currentProgress,
+        completedMissionIds: [...currentProgress.completedMissionIds, mission.id],
       };
     });
   };

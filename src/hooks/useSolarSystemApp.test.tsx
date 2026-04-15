@@ -1,10 +1,18 @@
 import { act, renderHook } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { missions } from "../data/missions";
 import { useSolarSystemApp } from "./useSolarSystemApp";
 
 describe("useSolarSystemApp", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("updates selected planet and comparison mode", () => {
     const { result } = renderHook(() => useSolarSystemApp());
 
@@ -25,7 +33,7 @@ describe("useSolarSystemApp", () => {
     expect(result.current.isCurrentMissionComplete).toBe(false);
   });
 
-  it("selecting the correct planet marks the mission complete before advancing", () => {
+  it("keeps the completed mission visible for 10 seconds before auto-advancing", () => {
     const { result } = renderHook(() => useSolarSystemApp());
 
     act(() => result.current.selectPlanet("mercury"));
@@ -36,7 +44,17 @@ describe("useSolarSystemApp", () => {
     expect(result.current.currentMission?.id).toBe(missions[0].id);
     expect(result.current.isCurrentMissionComplete).toBe(true);
 
-    act(() => result.current.selectPlanet("mercury"));
+    act(() => {
+      vi.advanceTimersByTime(9_999);
+    });
+
+    expect(result.current.currentMissionIndex).toBe(0);
+    expect(result.current.currentMission?.id).toBe(missions[0].id);
+    expect(result.current.isCurrentMissionComplete).toBe(true);
+
+    act(() => {
+      vi.advanceTimersByTime(1);
+    });
 
     expect(result.current.currentMissionIndex).toBe(1);
     expect(result.current.currentMission?.id).toBe(missions[1].id);
@@ -52,6 +70,14 @@ describe("useSolarSystemApp", () => {
     });
 
     expect(result.current.completedMissionIds).toEqual([missions[0].id]);
+    expect(result.current.currentMissionIndex).toBe(0);
+    expect(result.current.currentMission?.id).toBe(missions[0].id);
+    expect(result.current.isCurrentMissionComplete).toBe(true);
+
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+
     expect(result.current.currentMissionIndex).toBe(1);
     expect(result.current.currentMission?.id).toBe(missions[1].id);
     expect(result.current.isCurrentMissionComplete).toBe(false);
@@ -69,7 +95,9 @@ describe("useSolarSystemApp", () => {
     expect(result.current.currentMission?.id).toBe(missions[0].id);
     expect(result.current.isCurrentMissionComplete).toBe(true);
 
-    act(() => result.current.selectPlanet("mercury"));
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
 
     expect(result.current.currentMissionIndex).toBe(1);
     expect(result.current.currentMission?.id).toBe(missions[1].id);
@@ -122,5 +150,52 @@ describe("useSolarSystemApp", () => {
     expect(result.current.completedMissionIds).toEqual([]);
     expect(result.current.isCurrentMissionComplete).toBe(false);
     expect(result.current.sceneResetVersion).toBe(resetVersionBefore + 1);
+  });
+
+  it("shows the final explanation for 10 seconds before clearing all missions", () => {
+    const { result } = renderHook(() => useSolarSystemApp());
+
+    act(() => result.current.selectPlanet("mercury"));
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+    act(() => result.current.selectPlanet("neptune"));
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+    act(() => result.current.selectPlanet("jupiter"));
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+    act(() => result.current.selectPlanet("venus"));
+
+    expect(result.current.currentMission?.id).toBe(missions[3].id);
+    expect(result.current.isCurrentMissionComplete).toBe(true);
+
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+
+    expect(result.current.currentMission).toBeNull();
+    expect(result.current.currentMissionIndex).toBe(missions.length);
+    expect(result.current.isCurrentMissionComplete).toBe(false);
+  });
+
+  it("cancels a pending auto-advance when the scene resets", () => {
+    const { result } = renderHook(() => useSolarSystemApp());
+
+    act(() => result.current.selectPlanet("mercury"));
+
+    expect(result.current.isCurrentMissionComplete).toBe(true);
+
+    act(() => result.current.resetScene());
+    act(() => {
+      vi.advanceTimersByTime(10_000);
+    });
+
+    expect(result.current.currentMission?.id).toBe(missions[0].id);
+    expect(result.current.currentMissionIndex).toBe(0);
+    expect(result.current.completedMissionIds).toEqual([]);
+    expect(result.current.isCurrentMissionComplete).toBe(false);
   });
 });
