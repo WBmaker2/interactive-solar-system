@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { statSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { planets, scaleNotice } from "./planets";
 
@@ -52,5 +52,27 @@ describe("planet data", () => {
           ).size > 1024
       )
     ).toBe(true);
+  });
+
+  it("keeps only the referenced planet image assets", () => {
+    const legacyAssets = [
+      "mercury.webp",
+      "venus.webp",
+      "earth.webp",
+      "mars.webp",
+      "jupiter.webp",
+      "saturn.webp",
+      "uranus.webp",
+      "neptune.webp",
+    ];
+
+    expect(
+      legacyAssets.some((fileName) =>
+        existsSync(join(process.cwd(), "public", "planets", fileName))
+      )
+    ).toBe(false);
+    expect(
+      existsSync(join(process.cwd(), "public", "planets", "nasa", "uranus.jpg"))
+    ).toBe(false);
   });
 });

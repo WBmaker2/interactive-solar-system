@@ -156,6 +156,8 @@ export default function SolarSystemCanvas({
   const appliedResetVersionRef = useRef(sceneResetVersion);
   const frameRef = useRef<number | null>(null);
   const previousTimeRef = useRef<number | null>(null);
+  const selectedPlanetIdRef = useRef(selectedPlanetId);
+  const speedMultiplierRef = useRef(speedMultiplier);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useLayoutEffect(() => {
@@ -193,6 +195,30 @@ export default function SolarSystemCanvas({
   }, []);
 
   useLayoutEffect(() => {
+    selectedPlanetIdRef.current = selectedPlanetId;
+    speedMultiplierRef.current = speedMultiplier;
+
+    if (isPlaying) {
+      return;
+    }
+
+    const canvas = canvasRef.current;
+
+    if (!canvas || canvasSize.width <= 0 || canvasSize.height <= 0) {
+      return;
+    }
+
+    drawScene(canvas, planets, anglesRef.current, selectedPlanetIdRef.current, sceneTargetRef);
+  }, [
+    canvasSize.height,
+    canvasSize.width,
+    isPlaying,
+    planets,
+    selectedPlanetId,
+    speedMultiplier,
+  ]);
+
+  useLayoutEffect(() => {
     const canvas = canvasRef.current;
 
     if (!canvas || canvasSize.width <= 0 || canvasSize.height <= 0) {
@@ -213,7 +239,7 @@ export default function SolarSystemCanvas({
     }
 
     stopLoop();
-    drawScene(canvas, planets, anglesRef.current, selectedPlanetId, sceneTargetRef);
+    drawScene(canvas, planets, anglesRef.current, selectedPlanetIdRef.current, sceneTargetRef);
 
     if (!isPlaying) {
       return stopLoop;
@@ -223,9 +249,14 @@ export default function SolarSystemCanvas({
       const previousTime = previousTimeRef.current ?? now;
       const deltaMs = now - previousTime;
 
-      anglesRef.current = advanceAngles(anglesRef.current, planets, deltaMs, speedMultiplier);
+      anglesRef.current = advanceAngles(
+        anglesRef.current,
+        planets,
+        deltaMs,
+        speedMultiplierRef.current,
+      );
       previousTimeRef.current = now;
-      drawScene(canvas, planets, anglesRef.current, selectedPlanetId, sceneTargetRef);
+      drawScene(canvas, planets, anglesRef.current, selectedPlanetIdRef.current, sceneTargetRef);
       frameRef.current = requestAnimationFrame(tick);
     };
 
@@ -238,8 +269,6 @@ export default function SolarSystemCanvas({
     isPlaying,
     planets,
     sceneResetVersion,
-    selectedPlanetId,
-    speedMultiplier,
   ]);
 
   const handlePointerDown = (event: PointerEvent<HTMLCanvasElement>) => {
@@ -279,6 +308,20 @@ export default function SolarSystemCanvas({
           height: "100%",
         }}
       />
+      <div className="scene-stage__planet-controls" role="group" aria-label="행성 바로 선택">
+        {planets.map((planet) => (
+          <button
+            key={planet.id}
+            type="button"
+            className="scene-stage__planet-button"
+            aria-pressed={planet.id === selectedPlanetId}
+            aria-label={`${planet.nameKo} 선택`}
+            onClick={() => onPlanetSelect(planet.id)}
+          >
+            {planet.nameKo}
+          </button>
+        ))}
+      </div>
     </section>
   );
 }

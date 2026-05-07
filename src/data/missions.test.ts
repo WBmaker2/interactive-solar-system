@@ -34,9 +34,12 @@ describe("missions", () => {
     expect(missionById.has("earth-like-planet")).toBe(true);
     expect(missionById.get("fastest-planet")?.completionExplanation).toEqual({
       answer: "수성",
-      reason: "수성은 태양에 가장 가까워서 가장 빠르게 한 바퀴를 돌아요.",
+      reason: "수성은 태양에 가장 가까워서 가장 빠르게 공전해요.",
       caution: "자전이 빠르다는 뜻이 아니라 공전이 빠르다는 뜻이에요.",
     });
+    expect(missionById.get("fastest-planet")?.prompt).toBe(
+      "가장 빠르게 공전하는 행성을 찾아보세요."
+    );
     expect(missionById.get("earth-like-planet")?.prompt).toBe(
       "지구와 크기가 비슷한 행성을 찾아보세요."
     );

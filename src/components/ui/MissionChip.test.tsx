@@ -4,11 +4,20 @@ import MissionChip from "./MissionChip";
 
 describe("MissionChip", () => {
   it("renders the active mission state", () => {
-    render(<MissionChip label="가장 빠르게 도는 행성을 찾아보세요." />);
+    render(
+      <MissionChip
+        label="가장 빠르게 공전하는 행성을 찾아보세요."
+        hint="태양에 가장 가까운 행성을 먼저 떠올려 보세요."
+      />
+    );
 
     expect(screen.getByText("진행 중")).toBeInTheDocument();
-    expect(screen.getByText("가장 빠르게 도는 행성을 찾아보세요.")).toHaveClass(
+    expect(screen.getByText("가장 빠르게 공전하는 행성을 찾아보세요.")).toHaveClass(
       "mission-chip__label"
+    );
+    expect(screen.getByText("힌트")).toBeInTheDocument();
+    expect(screen.getByText("태양에 가장 가까운 행성을 먼저 떠올려 보세요.")).toHaveClass(
+      "mission-chip__hint-text"
     );
   });
 

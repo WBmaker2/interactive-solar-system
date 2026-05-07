@@ -4,11 +4,11 @@ export const missions: MissionDefinition[] = [
   {
     id: "fastest-planet",
     goalType: "selectPlanet",
-    prompt: "가장 빠르게 도는 행성을 찾아보세요.",
+    prompt: "가장 빠르게 공전하는 행성을 찾아보세요.",
     hint: "태양에 가장 가까운 행성을 먼저 떠올려 보세요.",
     completionExplanation: {
       answer: "수성",
-      reason: "수성은 태양에 가장 가까워서 가장 빠르게 한 바퀴를 돌아요.",
+      reason: "수성은 태양에 가장 가까워서 가장 빠르게 공전해요.",
       caution: "자전이 빠르다는 뜻이 아니라 공전이 빠르다는 뜻이에요.",
     },
     targetPlanetId: "mercury",

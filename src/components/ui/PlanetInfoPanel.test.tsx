@@ -23,7 +23,7 @@ describe("PlanetInfoPanel", () => {
       screen.getByAltText("수성의 실제 모습")
     ).toBeInTheDocument();
     expect(screen.getByText("태양에 가장 가까워 빠르게 한 바퀴를 도는 행성이에요.")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "기초 수치" })).toBeInTheDocument();
+    expect(screen.getByText("자세한 숫자 보기")).toBeInTheDocument();
     expect(screen.getByText("지구의 0.38배")).toBeInTheDocument();
     expect(screen.getByText("지구보다 훨씬 작아요")).toBeInTheDocument();
     expect(screen.getByText("0.39 AU")).toBeInTheDocument();

@@ -17,6 +17,7 @@ describe("MobileInfoSheet", () => {
       screen.getByRole("complementary", { name: "행성 정보 바텀 시트" })
     ).toHaveAttribute("data-open", "true");
     expect(screen.getByRole("heading", { name: "지구" })).toBeInTheDocument();
+    expect(screen.getByText("자세한 숫자 보기")).toBeInTheDocument();
     expect(screen.getByText("지구의 1배")).toBeInTheDocument();
     expect(screen.getByText("지구와 비슷한 크기예요")).toBeInTheDocument();
     expect(screen.getByText("태양과 가까운 편이에요")).toBeInTheDocument();

@@ -54,6 +54,7 @@ export default function App() {
             {currentMission ? (
               <MissionChip
                 label={currentMission.prompt}
+                hint={currentMission.hint}
                 explanation={
                   isCurrentMissionComplete ? currentMission.completionExplanation : undefined
                 }

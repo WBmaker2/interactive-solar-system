@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { missions } from "./data/missions";
@@ -57,9 +57,10 @@ describe("App mission strip", () => {
     expect(screen.getByText("정답")).toBeInTheDocument();
     expect(screen.getByText("왜 그럴까요?")).toBeInTheDocument();
     expect(screen.getByText("헷갈리기 쉬운 점")).toBeInTheDocument();
-    expect(screen.getByText(missions[0].completionExplanation.answer)).toBeInTheDocument();
-    expect(screen.getByText(missions[0].completionExplanation.reason)).toBeInTheDocument();
-    expect(screen.getByText(missions[0].completionExplanation.caution)).toBeInTheDocument();
+    const explanation = screen.getByLabelText("미션 정답 설명");
+    expect(within(explanation).getByText(missions[0].completionExplanation.answer)).toBeInTheDocument();
+    expect(within(explanation).getByText(missions[0].completionExplanation.reason)).toBeInTheDocument();
+    expect(within(explanation).getByText(missions[0].completionExplanation.caution)).toBeInTheDocument();
   });
 
   it("shows the all-clear message when no mission is left", () => {

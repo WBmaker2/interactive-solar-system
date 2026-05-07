@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "check": "npm run typecheck:test && npm run test -- --run && npm run build && playwright test",
     "preview": "vite preview",
-    "test:e2e": "playwright test",
-    "test:e2e:pages": "PLAYWRIGHT_BASE_URL=https://wbmaker2.github.io/interactive-solar-system/ playwright test",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "test:e2e": "npm run build && playwright test",
+    "test:e2e:pages": "PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://wbmaker2.github.io/interactive-solar-system/} playwright test",
     "test:e2e:headed": "playwright test --headed",
     "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
     "test": "vitest"

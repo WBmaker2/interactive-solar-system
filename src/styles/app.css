@@ -116,6 +116,29 @@ input {
   line-height: 1.5;
 }
 
+.mission-chip__hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  align-items: baseline;
+  margin: 0.1rem 0 0;
+  color: rgba(255, 244, 211, 0.86);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.mission-chip__hint-label {
+  color: #f7c85f;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mission-chip__hint-text {
+  flex: 1 1 15rem;
+}
+
 .mission-chip__explanation {
   display: grid;
   gap: 0.55rem;
@@ -176,6 +199,46 @@ input {
 .scene-stage {
   min-height: 56vh;
   border-radius: 1.5rem;
+}
+
+.scene-stage__planet-controls {
+  position: absolute;
+  inset: auto 1rem 1rem;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(3, 8, 17, 0.68);
+  backdrop-filter: blur(12px);
+}
+
+.scene-stage__planet-button {
+  min-width: 2.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(244, 247, 255, 0.88);
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.32rem 0.52rem;
+}
+
+.scene-stage__planet-button:hover,
+.scene-stage__planet-button:focus-visible {
+  border-color: rgba(124, 199, 255, 0.55);
+  background: rgba(124, 199, 255, 0.16);
+  outline: none;
+}
+
+.scene-stage__planet-button[aria-pressed="true"] {
+  border-color: rgba(247, 200, 95, 0.72);
+  background: rgba(247, 200, 95, 0.18);
+  color: #fff4d3;
 }
 
 .info-panel {
@@ -285,35 +348,50 @@ input {
   color: rgba(255, 244, 211, 0.82);
 }
 
-.info-panel__metrics {
+.planet-metrics {
+  border: 1px solid rgba(124, 199, 255, 0.16);
+  border-radius: 0.95rem;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.75rem;
+}
+
+.planet-metrics__summary {
+  color: #d9edff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.planet-metrics__list {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
+  margin: 0.75rem 0 0;
 }
 
-.info-panel__metrics div {
+.planet-metrics__list div {
   border-radius: 0.9rem;
   padding: 0.85rem;
   background: rgba(255, 255, 255, 0.05);
 }
 
-.info-panel__metrics dt {
+.planet-metrics__list dt {
   font-size: 0.78rem;
   color: rgba(244, 247, 255, 0.55);
 }
 
-.info-panel__metrics dd {
+.planet-metrics__list dd {
   margin: 0.35rem 0 0;
   display: grid;
   gap: 0.3rem;
   color: #f4f7ff;
 }
 
-.info-panel__metric-value {
+.planet-metrics__value {
   font-size: 0.95rem;
 }
 
-.info-panel__metric-note {
+.planet-metrics__note {
   font-size: 0.86rem;
   color: rgba(244, 247, 255, 0.72);
 }
@@ -323,14 +401,14 @@ input {
   font-size: 0.95rem;
 }
 
-.info-panel__facts ul {
+.planet-facts {
   margin: 0;
   padding-left: 1.1rem;
   color: rgba(244, 247, 255, 0.84);
   line-height: 1.7;
 }
 
-.info-panel__facts li + li {
+.planet-facts li + li {
   margin-top: 0.3rem;
 }
 
@@ -1030,57 +1108,57 @@ input {
     color: rgba(255, 244, 211, 0.84);
   }
 
-  .mobile-info-sheet__section-title {
+  .mobile-info-sheet__section-title,
+  .mobile-info-sheet .info-panel__section-title {
     margin: 0 0 0.45rem;
     font-size: 0.9rem;
   }
 
-  .mobile-info-sheet__metrics {
+  .planet-metrics__list {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.65rem;
-    margin: 0;
   }
 
-  .mobile-info-sheet__metrics div {
+  .planet-metrics__list div {
     border-radius: 0.85rem;
     padding: 0.75rem;
     background: rgba(255, 255, 255, 0.05);
   }
 
-  .mobile-info-sheet__metrics dt {
+  .planet-metrics__list dt {
     font-size: 0.72rem;
     color: rgba(244, 247, 255, 0.56);
   }
 
-  .mobile-info-sheet__metrics dd {
+  .planet-metrics__list dd {
     margin: 0.28rem 0 0;
     display: grid;
     gap: 0.24rem;
     color: #f4f7ff;
   }
 
-  .mobile-info-sheet__metric-value {
+  .planet-metrics__value {
     font-size: 0.88rem;
   }
 
-  .mobile-info-sheet__metric-note {
+  .planet-metrics__note {
     font-size: 0.8rem;
     color: rgba(244, 247, 255, 0.72);
   }
 
-  .mobile-info-sheet__facts {
+  .mobile-info-sheet .planet-facts {
     margin: 0;
     padding-left: 1rem;
     color: rgba(244, 247, 255, 0.84);
     line-height: 1.55;
   }
 
-  .mobile-info-sheet__facts li + li {
+  .mobile-info-sheet .planet-facts li + li {
     margin-top: 0.2rem;
   }
 
-  .info-panel__metrics {
+  .planet-metrics__list {
     grid-template-columns: 1fr;
   }
 
@@ -1191,5 +1269,24 @@ input {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+
+  .motion-guide__planet--spin,
+  .motion-guide__planet-surface,
+  .motion-guide__orbit-rotator {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .mobile-info-sheet__content {
+    transition: none;
   }
 }

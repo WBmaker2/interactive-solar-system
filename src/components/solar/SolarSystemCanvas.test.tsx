@@ -70,6 +70,29 @@ describe("SolarSystemCanvas", () => {
     expect(onPlanetSelect).toHaveBeenCalledWith("mercury");
   });
 
+  it("offers accessible planet selection buttons outside pointer hit testing", async () => {
+    const onPlanetSelect = vi.fn();
+
+    render(
+      <SolarSystemCanvas
+        isPlaying={false}
+        onPlanetSelect={onPlanetSelect}
+        planets={planets}
+        sceneResetVersion={0}
+        selectedPlanetId={null}
+        speedMultiplier={1}
+      />,
+    );
+
+    const controls = screen.getByRole("group", { name: "행성 바로 선택" });
+    const earthButton = screen.getByRole("button", { name: "지구 선택" });
+
+    expect(controls).toBeInTheDocument();
+    earthButton.click();
+
+    expect(onPlanetSelect).toHaveBeenCalledWith("earth");
+  });
+
   it("updates hit targets after animation frames advance", async () => {
     const onPlanetSelect = vi.fn();
 
@@ -173,7 +196,12 @@ describe("SolarSystemCanvas", () => {
     env.flushAnimationFrame(4000);
 
     const expectedAngles = advanceAngles(
-      advanceAngles(createInitialAngles(), planets, 1000, 6),
+      advanceAngles(
+        advanceAngles(createInitialAngles(), planets, 1000, 6),
+        planets,
+        1000,
+        12,
+      ),
       planets,
       1000,
       12,
@@ -188,6 +216,39 @@ describe("SolarSystemCanvas", () => {
     clickPlanet((mercury?.x ?? 0) + 1, (mercury?.y ?? 0) + 1);
 
     expect(onPlanetSelect).toHaveBeenCalledWith("mercury");
+  });
+
+  it("keeps the animation loop alive when selection or speed changes", async () => {
+    const onPlanetSelect = vi.fn();
+
+    const { rerender } = render(
+      <SolarSystemCanvas
+        isPlaying
+        onPlanetSelect={onPlanetSelect}
+        planets={planets}
+        sceneResetVersion={0}
+        selectedPlanetId={null}
+        speedMultiplier={1}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(env.requestAnimationFrameMock).toHaveBeenCalledTimes(1);
+    });
+
+    rerender(
+      <SolarSystemCanvas
+        isPlaying
+        onPlanetSelect={onPlanetSelect}
+        planets={planets}
+        sceneResetVersion={0}
+        selectedPlanetId="earth"
+        speedMultiplier={10}
+      />,
+    );
+
+    expect(env.cancelAnimationFrameMock).not.toHaveBeenCalled();
+    expect(env.requestAnimationFrameMock).toHaveBeenCalledTimes(1);
   });
 
   it("restores the initial orbit positions after reset", async () => {

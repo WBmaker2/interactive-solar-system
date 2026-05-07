@@ -1,11 +1,7 @@
 import type { PlanetRecord } from "../../types/solar-system";
-import {
-  describeDistance,
-  describeOrbitalPeriod,
-  describePlanetSize,
-  formatPlanetMetricValue,
-} from "../../lib/planet-interpretation";
+import PlanetFacts from "./PlanetFacts";
 import PlanetImageAttribution from "./PlanetImageAttribution";
+import PlanetMetrics from "./PlanetMetrics";
 
 interface PlanetInfoPanelProps {
   planet: PlanetRecord | null;
@@ -35,58 +31,18 @@ export default function PlanetInfoPanel({ planet }: PlanetInfoPanelProps) {
 
           <p className="info-panel__summary">{planet.summary}</p>
 
-          <section aria-label="기초 수치">
-            <h3 className="info-panel__section-title">기초 수치</h3>
-            <dl className="info-panel__metrics">
-              <div>
-                <dt>크기</dt>
-                <dd>
-                  <span className="info-panel__metric-value">
-                    지구의 {formatPlanetMetricValue(planet.diameterEarths, "배")}
-                  </span>
-                  <span className="info-panel__metric-note">
-                    {describePlanetSize(planet.diameterEarths)}
-                  </span>
-                </dd>
-              </div>
-              <div>
-                <dt>태양과의 거리</dt>
-                <dd>
-                  <span className="info-panel__metric-value">
-                    {formatPlanetMetricValue(planet.distanceFromSunAU, "AU")}
-                  </span>
-                  <span className="info-panel__metric-note">
-                    {describeDistance(planet.distanceFromSunAU)}
-                  </span>
-                </dd>
-              </div>
-              <div>
-                <dt>공전</dt>
-                <dd>
-                  <span className="info-panel__metric-value">
-                    {formatPlanetMetricValue(planet.orbitalPeriodDays, "일")}
-                  </span>
-                  <span className="info-panel__metric-note">
-                    {describeOrbitalPeriod(planet.orbitalPeriodDays)}
-                  </span>
-                </dd>
-              </div>
-            </dl>
-          </section>
-
-          <section className="info-panel__facts" aria-label="행성 특징">
-            <h3 className="info-panel__section-title">이런 점을 살펴보세요</h3>
-            <ul>
-              {planet.facts.map((fact) => (
-                <li key={fact}>{fact}</li>
-              ))}
-            </ul>
-          </section>
+          <PlanetFacts
+            className="info-panel__facts"
+            planet={planet}
+            title="이런 점을 살펴보세요"
+          />
 
           <section className="info-panel__next" aria-label="다음 탐색 안내">
             <h3 className="info-panel__section-title">다음 관찰 포인트</h3>
             <p>{planet.nextExplorationPrompt}</p>
           </section>
+
+          <PlanetMetrics planet={planet} />
         </div>
       ) : (
         <div className="info-panel__empty">

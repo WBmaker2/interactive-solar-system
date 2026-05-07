@@ -1,11 +1,7 @@
 import type { PlanetRecord } from "../../types/solar-system";
-import {
-  describeDistance,
-  describeOrbitalPeriod,
-  describePlanetSize,
-  formatPlanetMetricValue,
-} from "../../lib/planet-interpretation";
+import PlanetFacts from "./PlanetFacts";
 import PlanetImageAttribution from "./PlanetImageAttribution";
+import PlanetMetrics from "./PlanetMetrics";
 
 interface MobileInfoSheetProps {
   planet: PlanetRecord | null;
@@ -35,55 +31,15 @@ export default function MobileInfoSheet({ planet }: MobileInfoSheetProps) {
             <p className="mobile-info-sheet__summary">{planet.summary}</p>
           </div>
 
-          <section className="mobile-info-sheet__facts-section" aria-label="행성 특징">
-            <h3 className="mobile-info-sheet__section-title">먼저 살펴볼 점</h3>
-            <ul className="mobile-info-sheet__facts">
-              {planet.facts.map((fact) => (
-                <li key={fact}>{fact}</li>
-              ))}
-            </ul>
-          </section>
+          <PlanetFacts
+            className="mobile-info-sheet__facts-section"
+            planet={planet}
+            title="먼저 살펴볼 점"
+          />
 
           <p className="mobile-info-sheet__next">{planet.nextExplorationPrompt}</p>
 
-          <section aria-label="기초 수치">
-            <h3 className="mobile-info-sheet__section-title">숫자와 해석</h3>
-            <dl className="mobile-info-sheet__metrics">
-              <div>
-                <dt>크기</dt>
-                <dd>
-                  <span className="mobile-info-sheet__metric-value">
-                    지구의 {formatPlanetMetricValue(planet.diameterEarths, "배")}
-                  </span>
-                  <span className="mobile-info-sheet__metric-note">
-                    {describePlanetSize(planet.diameterEarths)}
-                  </span>
-                </dd>
-              </div>
-              <div>
-                <dt>거리</dt>
-                <dd>
-                  <span className="mobile-info-sheet__metric-value">
-                    {formatPlanetMetricValue(planet.distanceFromSunAU, "AU")}
-                  </span>
-                  <span className="mobile-info-sheet__metric-note">
-                    {describeDistance(planet.distanceFromSunAU)}
-                  </span>
-                </dd>
-              </div>
-              <div>
-                <dt>공전</dt>
-                <dd>
-                  <span className="mobile-info-sheet__metric-value">
-                    {formatPlanetMetricValue(planet.orbitalPeriodDays, "일")}
-                  </span>
-                  <span className="mobile-info-sheet__metric-note">
-                    {describeOrbitalPeriod(planet.orbitalPeriodDays)}
-                  </span>
-                </dd>
-              </div>
-            </dl>
-          </section>
+          <PlanetMetrics planet={planet} />
 
           <PlanetImageAttribution planet={planet} />
         </div>

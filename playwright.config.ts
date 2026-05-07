@@ -1,7 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL =
-  process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:4173";
+const localPreviewPort = process.env.PLAYWRIGHT_PORT ?? "4373";
+const localPreviewOrigin = `http://127.0.0.1:${localPreviewPort}`;
+const localPreviewBasePath =
+  process.env.PLAYWRIGHT_BASE_PATH ?? "/interactive-solar-system/";
+const localPreviewURL = new URL(localPreviewBasePath, localPreviewOrigin).toString();
+const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? localPreviewURL;
 const useExternalBaseURL = Boolean(process.env.PLAYWRIGHT_BASE_URL);
 
 export default defineConfig({
@@ -23,9 +27,9 @@ export default defineConfig({
   webServer: useExternalBaseURL
     ? undefined
     : {
-        command: "npm run dev -- --host 127.0.0.1 --port 4173",
-        url: "http://127.0.0.1:4173",
-        reuseExistingServer: !process.env.CI,
+        command: `npm run serve:dist -- --host 127.0.0.1 --port ${localPreviewPort} --base ${localPreviewBasePath}`,
+        url: localPreviewURL,
+        reuseExistingServer: false,
         stdout: "pipe",
         stderr: "pipe",
         timeout: 120000,
