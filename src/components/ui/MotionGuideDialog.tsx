@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { PlanetRecord } from "../../types/solar-system";
 
@@ -20,6 +20,39 @@ function getContextMessage(planet: PlanetRecord | null) {
   return `${planet.nameKo}도 스스로 돌고, 태양 주위를 돌아요. 메인 화면에서는 이 공전을 더 크게 보고 있어요.`;
 }
 
+function withBase(path: string) {
+  const baseUrl = import.meta.env?.BASE_URL ?? "/";
+  return `${baseUrl}${path.replace(/^\//, "")}`;
+}
+
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    if (!window.matchMedia) {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    updatePreference();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updatePreference);
+      return () => mediaQuery.removeEventListener("change", updatePreference);
+    }
+
+    mediaQuery.addListener(updatePreference);
+    return () => mediaQuery.removeListener(updatePreference);
+  }, []);
+
+  return prefersReducedMotion;
+}
+
+const earthRotationVideoSrc = withBase("/learning/earth-rotation.mp4");
+const earthRotationPosterSrc = withBase("/learning/earth-rotation-poster.png");
+
 export default function MotionGuideDialog({
   isOpen,
   onClose,
@@ -27,6 +60,7 @@ export default function MotionGuideDialog({
 }: MotionGuideDialogProps) {
   const dialogRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
     if (!isOpen) {
@@ -125,11 +159,25 @@ export default function MotionGuideDialog({
         <div className="motion-guide__cards">
           <article className="motion-guide__card">
             <div className="motion-guide__visual motion-guide__visual--spin" aria-hidden="true">
-              <span className="motion-guide__planet motion-guide__planet--spin">
-                <span className="motion-guide__planet-surface" />
-                <span className="motion-guide__planet-highlight" />
-              </span>
-              <span className="motion-guide__axis" />
+              <div className="motion-guide__rotation-media">
+                <img
+                  alt=""
+                  className="motion-guide__rotation-poster"
+                  src={earthRotationPosterSrc}
+                />
+                {!prefersReducedMotion && (
+                  <video
+                    autoPlay
+                    className="motion-guide__rotation-video"
+                    loop
+                    muted
+                    playsInline
+                    poster={earthRotationPosterSrc}
+                  >
+                    <source src={earthRotationVideoSrc} type="video/mp4" />
+                  </video>
+                )}
+              </div>
             </div>
             <h3>자전</h3>
             <p>행성이 스스로 도는 것</p>

@@ -78,6 +78,21 @@ async function expectImageLoaded(image: Locator) {
     .toBeGreaterThan(0);
 }
 
+async function expectVideoLoaded(video: Locator) {
+  await expect(video).toBeVisible();
+  await expect
+    .poll(async () =>
+      video.evaluate((node) => {
+        if (!(node instanceof HTMLVideoElement)) {
+          return 0;
+        }
+
+        return node.readyState;
+      })
+    )
+    .toBeGreaterThan(0);
+}
+
 test.describe("Interactive Solar System", () => {
   test("desktop flow: pause, click earth, and open comparison view", async ({
     page,
@@ -111,6 +126,29 @@ test.describe("Interactive Solar System", () => {
     await expect(
       page.getByRole("dialog", { name: "태양계 비교 보기" })
     ).toBeHidden();
+  });
+
+  test("opens the motion guide and loads the rendered earth rotation loop", async ({
+    page,
+  }) => {
+    await page.goto(appEntryPath);
+
+    await page.getByRole("button", { name: "자전과 공전" }).click();
+
+    const dialog = page.getByRole("dialog", { name: "자전과 공전" });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByRole("heading", { exact: true, name: "자전" })).toBeVisible();
+    await expect(dialog.getByRole("heading", { exact: true, name: "공전" })).toBeVisible();
+
+    const rotationVideo = dialog.locator(".motion-guide__rotation-video");
+    await expectVideoLoaded(rotationVideo);
+    await expect(rotationVideo.locator("source")).toHaveAttribute(
+      "src",
+      /\/learning\/earth-rotation\.mp4$/
+    );
+
+    await page.getByRole("button", { name: "닫기" }).click();
+    await expect(dialog).toBeHidden();
   });
 
   test.describe("mobile flow", () => {

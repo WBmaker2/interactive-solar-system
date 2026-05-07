@@ -8,6 +8,9 @@
     "build": "tsc -b && vite build",
     "check": "npm run typecheck:test && npm run test -- --run && npm run build && playwright test",
     "preview": "vite preview",
+    "remotion:earth:render": "node remotion/earth-rotation/render-earth-rotation.mjs",
+    "remotion:earth:still": "remotion still remotion/earth-rotation/Root.tsx EarthRotationLoop public/learning/earth-rotation-poster.png --frame=45 --overwrite",
+    "remotion:earth:studio": "remotion studio remotion/earth-rotation/Root.tsx",
     "serve:dist": "node scripts/serve-dist.mjs",
     "test:e2e": "npm run build && playwright test",
     "test:e2e:pages": "PLAYWRIGHT_BASE_URL=${PLAYWRIGHT_BASE_URL:-https://wbmaker2.github.io/interactive-solar-system/} playwright test",
@@ -21,6 +24,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "@remotion/cli": "4.0.457",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.5.2",
@@ -29,6 +33,7 @@
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
     "jsdom": "^24.1.1",
+    "remotion": "4.0.457",
     "typescript": "^5.5.4",
     "vite": "^5.3.4",
     "vitest": "^2.0.5"

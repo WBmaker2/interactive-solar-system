@@ -759,64 +759,29 @@ input {
   place-items: center;
 }
 
-.motion-guide__planet {
+.motion-guide__rotation-media {
   position: relative;
-  width: 3.8rem;
-  height: 3.8rem;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #9fdfff, #2f7cf2 68%, #0f2d63);
+  width: min(82%, 18rem);
+  aspect-ratio: 16 / 9;
+  border-radius: 0.9rem;
   overflow: hidden;
-  box-shadow:
-    inset -0.45rem 0 0.85rem rgba(4, 17, 43, 0.4),
-    0 0 18px rgba(47, 124, 242, 0.2);
+  background: rgba(8, 14, 24, 0.88);
+  box-shadow: 0 0 24px rgba(64, 157, 255, 0.1);
 }
 
-.motion-guide__planet--spin {
-  animation: motion-guide-planet-wobble 5s ease-in-out infinite;
+.motion-guide__rotation-poster,
+.motion-guide__rotation-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.55);
+  transform-origin: 50% 50%;
 }
 
-.motion-guide__planet-surface,
-.motion-guide__planet-highlight {
+.motion-guide__rotation-video {
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-}
-
-.motion-guide__planet-surface {
-  left: -38%;
-  width: 176%;
-  background:
-    radial-gradient(circle at 28% 36%, rgba(170, 237, 255, 0.95) 0 11%, transparent 12%),
-    radial-gradient(circle at 52% 62%, rgba(13, 78, 161, 0.85) 0 10%, transparent 11%),
-    radial-gradient(circle at 76% 30%, rgba(111, 216, 255, 0.65) 0 13%, transparent 14%),
-    linear-gradient(
-      90deg,
-      rgba(5, 31, 79, 0.78) 0 10%,
-      rgba(53, 159, 255, 0.1) 10% 18%,
-      rgba(8, 83, 173, 0.78) 18% 31%,
-      rgba(148, 230, 255, 0.42) 31% 42%,
-      rgba(11, 109, 209, 0.88) 42% 58%,
-      rgba(125, 213, 255, 0.45) 58% 70%,
-      rgba(7, 58, 132, 0.84) 70% 84%,
-      rgba(123, 220, 255, 0.34) 84% 100%
-    );
-  mix-blend-mode: screen;
-  opacity: 0.9;
-  animation: motion-guide-spin-surface 3.2s linear infinite;
-}
-
-.motion-guide__planet-highlight {
-  background:
-    radial-gradient(circle at 28% 26%, rgba(255, 255, 255, 0.34), transparent 26%),
-    radial-gradient(circle at 68% 76%, rgba(5, 14, 44, 0.4), transparent 34%);
-}
-
-.motion-guide__axis {
-  position: absolute;
-  width: 0.18rem;
-  height: 5.5rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.36);
 }
 
 .motion-guide__sun {
@@ -1241,27 +1206,6 @@ input {
   }
 }
 
-@keyframes motion-guide-spin-surface {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-32%);
-  }
-}
-
-@keyframes motion-guide-planet-wobble {
-  0%,
-  100% {
-    transform: rotate(-4deg) scale(1);
-  }
-
-  50% {
-    transform: rotate(4deg) scale(1.02);
-  }
-}
-
 @keyframes motion-guide-orbit {
   from {
     transform: rotate(0deg);
@@ -1279,11 +1223,13 @@ input {
     scroll-behavior: auto !important;
   }
 
-  .motion-guide__planet--spin,
-  .motion-guide__planet-surface,
   .motion-guide__orbit-rotator {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .motion-guide__rotation-video {
+    display: none;
   }
 
   .mobile-info-sheet__content {
